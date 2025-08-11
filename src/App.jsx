@@ -173,7 +173,7 @@ function Page1() {
 
   return (
     <Layout>
-      <div className="content-box">
+      <div className="content-box page1">
         <h1>{title}</h1>
         {subtitle && (
           <div className="type-container">
@@ -208,7 +208,7 @@ function Page1() {
     </Layout>
   )
 }
-function Page2() { return (<Layout><div className="content-box"><h1>Topographie de l'étrange</h1><div className="type-container"><Typewriter text="Du sacré dans le profane, de la beauté dans la décrépitude" /></div></div><FloatingGallery /><Checklist /><SongSelect /></Layout>) }
+function Page2() { return (<Layout><div className="content-box page2"><h1>Topographie de l'étrange</h1><div className="type-container"><Typewriter text="Du sacré dans le profane, de la beauté dans la décrépitude" /></div></div><FloatingGallery /><Checklist /><SongSelect /></Layout>) }
 function Page3() {
   const { data } = useSheetData('page3_reliques_reve')
   const row = Array.isArray(data) && data.length > 0 ? data[0] : null
@@ -217,7 +217,7 @@ function Page3() {
   const imageUrl = row?.image_url ? processImageUrl(row.image_url) : `${base}images/P1082181.JPG`
   return (
     <Layout>
-      <div className="content-box">
+      <div className="content-box page3">
         <div className="main-content">
           <h1>{title}</h1>
           <div className="type-container">
