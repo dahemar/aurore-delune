@@ -281,3 +281,15 @@ html, body { overflow-x: hidden; }
   .page3 .type-container { margin: 16px auto 20px auto; }
   .page3 .content-box img { margin: 20px auto 8px auto; max-width: 100%; height: auto; }
 }
+
+/* Page3: 27px right shift for title, subtitle, and image */
+.page3 .content-box h1 { position: relative; left: 27px; }
+.page3 .content-box .type-container .type-h2 { position: relative; left: 27px; }
+.page3 .content-box img { position: relative; left: 27px; }
+
+@media (max-width: 768px) {
+  /* Keep shift on mobile too, while preserving symmetric paddings */
+  .page3 .content-box h1 { left: 27px; }
+  .page3 .content-box .type-container .type-h2 { left: 27px; }
+  .page3 .content-box img { left: 27px; }
+}
