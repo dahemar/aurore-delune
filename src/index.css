@@ -40,7 +40,10 @@ h1 { color: rgb(246, 236, 248); margin: 0 auto; text-align: center; }
 
 h2 { color: rgb(180, 170, 189); margin: 0 auto; text-align: center; }
 
-.type-container { width: 100%; overflow: hidden; position: relative; }
+/* Increase spacing below titles inside content areas */
+.content-box h1 { margin-bottom: 36px; }
+
+.type-container { width: 100%; overflow: hidden; position: relative; margin: 24px auto; }
 .type-h2 { display: inline-block; white-space: nowrap; position: relative; }
 .type-h2::after { content: ""; display: inline-block; width: 2px; height: 1em; background: currentColor; margin-left: 4px; animation: blink 0.9s steps(1) infinite; vertical-align: -0.1em; }
 @keyframes blink { 50% { opacity: 0; } }
@@ -76,6 +79,12 @@ h2 { color: rgb(180, 170, 189); margin: 0 auto; text-align: center; }
 .main-content .gallery img { max-width: 100%; height: auto; }
 
 .content-box { background-color: rgba(0,0,0,0.4); color: white; padding: 20px; margin: 0 auto; width: 90%; border-radius: 10px; }
+
+/* Add spacing before the contact form */
+#contactForm { margin-top: 28px; }
+#contactForm label { display: block; margin: 12px 0 6px; }
+#contactForm input,
+#contactForm textarea { margin-bottom: 16px; }
 
 @media (max-width: 768px) { .content-box { width: 95vw; max-width: none; margin: 0 auto; padding: 15px; } }
 body.page1 .content-box { width: 100%; margin-right: auto; }
@@ -186,11 +195,11 @@ html, body { overflow-x: hidden; }
 
   .content-box h1 {
     font-size: 1.8rem;
-    margin-bottom: 15px;
+    margin-bottom: 24px;
   }
 
   .type-container {
-    margin: 15px 0;
+    margin: 20px 0;
   }
 
   .typewriter {
