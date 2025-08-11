@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/aurore/',
+  base: '/aurore-delune/',
   server: {
     hmr: {
       overlay: false, // Desactiva el overlay de errores para mejor UX
