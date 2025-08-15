@@ -307,13 +307,59 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     left: auto;
   }
   
-  /* Images */
-  img { 
-    max-width: 100%; 
-    height: auto; 
-    display: block; 
-    margin: 12px auto; 
-  }
+  /* Images - Optimized for faster loading */
+img { 
+  max-width: 100%; 
+  height: auto; 
+  display: block; 
+  margin: 12px auto; 
+  /* Performance optimizations */
+  will-change: auto;
+  contain: layout style paint;
+  /* Prevent layout shifts */
+  aspect-ratio: attr(width) / attr(height);
+  /* Smooth loading */
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Show images when loaded */
+img.loaded {
+  opacity: 1;
+}
+
+/* Preload critical images */
+img[data-preload="true"] {
+  opacity: 1;
+  transition: none;
+}
+
+/* Image loading optimizations */
+img {
+  /* Prevent layout shifts */
+  contain: layout style paint;
+  /* Optimize rendering */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* Hardware acceleration */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Smooth scaling */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Lazy loading placeholder */
+img:not(.loaded):not(.preload) {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
   
   /* Checklist */
   .checklist ul { 
@@ -374,7 +420,24 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     left: 8px; 
     z-index: 1000; 
   }
-  .home-logo img { width: 72px; height: auto; }
+  .home-logo img { 
+    width: 72px; 
+    height: auto; 
+    /* Preload critical home image */
+    data-preload: true;
+  }
+  
+  /* Mobile image optimizations */
+  img { 
+    /* Performance optimizations */
+    will-change: auto;
+    contain: layout style paint;
+    /* Faster rendering on mobile */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Prevent layout shifts */
+    aspect-ratio: attr(width) / attr(height);
+  }
   
   /* Audio player */
   #audio-player { 
