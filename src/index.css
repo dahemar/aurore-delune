@@ -1,17 +1,45 @@
 body {
   font-size: 20px;
   font-family: FairyDustB;
-  background-image: url("/images/background.jpg");
+  background-image: url("/aurore-delune/images/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
   margin: 0;
+  padding: 0;
+}
+
+/* Neutralizar estilos del template (#root) en móvil */
+@media (max-width: 768px) {
+  #root { 
+    max-width: none; 
+    padding: 0 !important; 
+    margin: 0 !important; 
+  }
+}
+
+/* RESET GLOBAL DE TRANSFORMS PARA DESKTOP */
+.container,
+.main-content,
+.content-box,
+.checklist,
+.simple-dropdown,
+.type-container,
+.poem,
+blockquote,
+h1,
+h2,
+p,
+div {
+  transform: none !important;
+  left: auto !important;
+  right: auto !important;
 }
 
 @font-face {
   font-family: "FairyDustB";
-  src: url("/fonts/FairydustB.woff") format("woff");
+  src: url("/aurore-delune/fonts/FairydustB.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -22,7 +50,7 @@ body {
   font-size: 20px;
   color: #ffeaea;
   text-align: center;
-  padding: 100px 20px;
+  padding: 100px 0; /* sin padding horizontal para centrar respecto al viewport completo */
   text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
 }
 
@@ -34,12 +62,10 @@ body {
 }
 
 .checklist li { margin-bottom: 15px; }
-.checklist label { padding-left: 8px; /* Añadir más espacio entre checkbox y texto */ }
+.checklist label { padding-left: 8px; }
 
 h1 { color: rgb(246, 236, 248); margin: 0 auto; text-align: center; }
-
 h2 { color: rgb(180, 170, 189); margin: 0 auto; text-align: center; }
-
 
 .type-container { width: 100%; overflow: hidden; position: relative; }
 .type-h2 { display: inline-block; white-space: nowrap; position: relative; }
@@ -49,7 +75,7 @@ h2 { color: rgb(180, 170, 189); margin: 0 auto; text-align: center; }
 .home-logo { display: block; text-align: center; margin-bottom: 20px; position: fixed; top: 10px; left: 10px; z-index: 1000; }
 .home-logo img { width: 100px; height: auto; cursor: pointer; transition: transform 0.2s ease; }
 
-.gallery { display: flex; gap: 10px; margin-top: 50px; }
+.gallery { display: flex; gap: 10px; margin-top: 50px; justify-content: center; align-items: center; }
 .gallery img { cursor: pointer; transition: transform 0.3s ease; }
 .gallery img:hover { transform: scale(1.05); }
 
@@ -68,19 +94,25 @@ h2 { color: rgb(180, 170, 189); margin: 0 auto; text-align: center; }
 .home-logo img.glow { filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px #8f3dff) drop-shadow(0 0 22px #8f3dff) !important; transform: scale(1.02) !important; transition: filter 0.2s, transform 0.2s; }
 .home-logo:hover img.glow { filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px #8f3dff) drop-shadow(0 0 22px #8f3dff) !important; transform: scale(1.02) !important; }
 
-.container { display: flex; min-height: 200vh; }
+.container { display: block; min-height: 200vh; width: 100%; }
+.sidebar { display: contents; }
 .sidebar ul { list-style: none; margin: 0; padding: 0; }
 .sidebar li { margin-bottom: 20px; }
 .sidebar a { display: block; text-decoration: none; color: black; padding: 8px 16px; transition: background 0.2s; }
 .sidebar a:hover { background: rgba(255, 255, 255, 0.1); }
-.main-content { flex: 1; padding: 20px; }
+
+.main-content { flex: 1; padding: 20px 0; text-align: center; }
 .main-content .gallery img { max-width: 100%; height: auto; }
 
-.content-box { background-color: rgba(0,0,0,0.4); color: white; padding: 20px; margin: 0 auto; width: 90%; border-radius: 10px; }
-
-
-@media (max-width: 768px) { .content-box { width: 95vw; max-width: none; margin: 0 auto; padding: 15px; } }
-body.page1 .content-box { width: 100%; margin-right: auto; }
+.content-box { 
+  background-color: transparent; 
+  color: inherit; 
+  padding: 20px 0; 
+  margin: 0 auto; 
+  width: 90%; 
+  border-radius: 0; 
+  text-align: center;
+}
 
 .simple-dropdown { text-align: center; margin-top: 500px; font-family: inherit; color: black; }
 .simple-dropdown label { font-size: 24px; font-weight: bold; display: block; margin-bottom: 10px; }
@@ -95,7 +127,13 @@ figcaption { font-size: 0.9em; color: #eee; margin-top: 5px; text-shadow: 0 1px 
 
 #fly { transition: transform 1s ease-in-out; }
 
-.main-column { margin-left: 200px; padding: 20px; max-width: 800px; }
+/* PROBLEMA 1: main-column con margin-left fijo - SOLUCIONADO */
+.main-column { 
+  margin: 0 auto; 
+  padding: 20px 0; 
+  max-width: 800px; 
+  text-align: center;
+}
 
 img { filter: sepia(10%) grayscale(5%) blur(0.3px); opacity: 0.96; }
 
@@ -103,194 +141,324 @@ img { filter: sepia(10%) grayscale(5%) blur(0.3px); opacity: 0.96; }
 #audio-player::-webkit-media-controls-panel { border-radius: 0 !important; }
 #audio-player::-webkit-media-controls-enclosure { border-radius: 0 !important; }
 
-@media (max-width: 768px) {
-  #audio-player { width: 200px; height: 40px; right: 10px; bottom: 10px; }
-}
-
 /* Prevent horizontal scroll */
-html, body { overflow-x: hidden; }
+html, body { overflow-x: hidden; max-width: 100vw; }
+
+/* Asegurar que ningún contenedor desborde el viewport horizontalmente */
+body, #root, .container, .main-content, .content-box, .poem, blockquote, .floating-gallery {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
 
 /* Disable hover on touch */
-@media (hover: none) { .gallery img:hover { transform: none !important; } .sidebar a:hover { background: transparent !important; } }
-
-/* Mobile reset */
-@media (max-width: 768px) {
-  body { font-size: 18px; background-attachment: fixed; background-size: cover; background-position: center center; }
-  .cursive-glow { padding: 48px 12px; font-size: 18px; }
-  .container { display: flex; flex-direction: column; min-height: auto; align-items: center; }
-  .home-logo { position: fixed; top: 8px; left: 8px; z-index: 1000; }
-  .home-logo img { width: 72px; height: auto; }
-  .main-content { padding: 12px; margin: 0 auto; max-width: 92vw; width: 92vw; box-sizing: border-box; flex: 0 0 auto; transform: translateX(-28px); }
-  h1, h2 { text-align: center; margin-left: 0; }
-  h1 { font-size: 1.6rem; }
-  h2 { font-size: 1.1rem; }
-  .type-container { overflow: visible; margin: 0 auto; max-width: 92vw; }
-  .type-h2 { display: block; white-space: normal; max-width: 92vw; margin: 0 auto; line-height: 1.3; overflow-wrap: anywhere; hyphens: auto; text-align: center; }
-  .checklist ul { margin: 24px auto 0 auto; padding: 0; }
-  .checklist li { margin-bottom: 12px; }
-  .simple-dropdown { text-align: center; margin-top: 24px; margin: 16px auto 0 auto; }
-  #lightbox-image { max-width: 92vw; max-height: 70vh; }
-  .floating-gallery { width: 100%; margin: 0 auto; }
-  .floating-gallery figure { width: 45vw; /* Aumentado de 30vw a 45vw (50% más grande) */ }
-  .floating-gallery figure.big-figure { width: 52.5vw; /* Aumentado de 35vw a 52.5vw (50% más grande) */ }
-  .content-box { margin: 12px auto; padding: 14px; width: 92vw; text-align: center; transform: translateX(-38px); }
-  .content-box img { display: block; margin: 12px auto; max-width: 100%; height: auto; }
-  .poem, blockquote { margin-left: auto; margin-right: auto; max-width: 92vw; }
-  img { max-width: 100%; height: auto; }
-  #audio-player { width: 200px; height: 40px; right: 10px; bottom: 10px; }
-}
-
-@media (max-width: 480px) {
-  body { font-size: 16px; }
-  .home-logo img { width: 64px; }
-  .cursive-glow { padding-top: 56px; }
-  .simple-dropdown select { font-size: 14px; padding: 8px 10px; }
-  .floating-gallery figure { width: 54vw; } /* Aumentado de 36vw a 54vw (50% más grande) */
-  .floating-gallery figure.big-figure { width: 66vw; } /* Aumentado de 44vw a 66vw (50% más grande) */
-}
-
-/* Home specific mobile background zoom */
-@media (max-width: 768px) {
-  body.home { min-height: 100dvh; background-attachment: fixed; background-size: cover; background-position: center center; background-repeat: no-repeat; }
-}
-
-/* Only show flies on home on mobile */
-@media (max-width: 768px) {
-  .fly { display: none !important; }
-  body.home .fly { display: block !important; }
+@media (hover: none) { 
+  .gallery img:hover { transform: none !important; } 
+  .sidebar a:hover { background: transparent !important; } 
 }
 
 /* Floating gallery tweaks */
 .floating-gallery figure { margin: 0; }
 .floating-gallery img { display: block; width: 100%; height: auto; pointer-events: none; }
 
+/* ===== MOBILE STYLES - SIMPLIFIED AND CONSOLIDATED ===== */
 @media (max-width: 768px) {
-  h1 { margin: 8px auto; }
-  h2 { margin: 6px auto; }
-  .main-column { margin-left: 0 !important; padding: 12px; max-width: 92vw; margin-right: auto; margin-left: auto; }
-  .poem { width: 92vw; margin-left: auto; margin-right: auto; transform: translateX(-8px); }
-}
-
-/* Remove any sidebar layout impact */
-.sidebar { display: contents; }
-
-@media (max-width: 768px) {
-  .main-content { margin-left: 0 !important; margin-right: 0 !important; max-width: 92vw; margin: 0 auto !important; }
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .content-box {
-    margin: 20px 15px;
-    padding: 20px 15px;
-    transform: translateX(-38px);
-  }
-
-  .content-box h1 {
-    font-size: 1.8rem;
-    margin-bottom: 24px;
-  }
-
-  .type-container {
-    margin: 15px 0;
-  }
-
-  .typewriter {
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-
-  .floating-gallery { 
-    width: 100%; 
-    margin: 0 auto; 
-  }
-  
-  .floating-gallery figure { 
-    width: 45vw; /* Aumentado de 30vw a 45vw (50% más grande) */
-  }
-  
-  .floating-gallery figure.big-figure { 
-    width: 52.5vw; /* Aumentado de 35vw a 52.5vw (50% más grande) */
-  }
-
-  .floating-gallery figure {
+  /* Base mobile reset */
+  body { 
+    font-size: 18px; 
+    background-attachment: fixed; 
+    background-size: cover; 
+    background-position: center center; 
+    text-align: center;
+    padding: 0;
     margin: 0;
   }
   
-  .floating-gallery img { 
+  /* Container and layout - PROBLEMA 4: flexbox alignment SOLUCIONADO */
+  .container { 
     display: block; 
     width: 100%; 
+    min-height: auto; 
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Root element reset */
+  #root { 
+    max-width: none; 
+    padding: 0; 
+    margin: 0; 
+    width: 100%;
+  }
+  
+  /* Main content centering - PROBLEMA 2: padding y width SOLUCIONADO */
+  .main-content { 
+    padding: 12px 0; /* Sin padding horizontal */
+    margin: 0 auto; 
+    width: 100%;
+    max-width: 92vw; 
+    box-sizing: border-box; 
+    flex: 0 0 auto; 
+    transform: none; 
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /* Content box centering */
+  .content-box { 
+    margin: 12px auto; 
+    padding: 14px; 
+    width: 100%;
+    max-width: 92vw; 
+    text-align: center; 
+    transform: none; 
+    box-sizing: border-box;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  
+  /* Typography */
+  h1, h2 { 
+    text-align: center; 
+    margin: 0 auto; 
+  }
+  h1 { font-size: 1.6rem; margin-bottom: 24px; }
+  h2 { font-size: 1.1rem; }
+  
+  /* Type container - PROBLEMA 3: position relative SOLUCIONADO */
+  .type-container { 
+    overflow: visible; 
+    margin: 0 auto; 
+    max-width: 92vw; 
+    text-align: center;
+    position: static;
+  }
+  .type-h2 { 
+    display: block; 
+    white-space: normal; 
+    max-width: 92vw; 
+    margin: 0 auto; 
+    line-height: 1.3; 
+    overflow-wrap: anywhere; 
+    hyphens: auto; 
+    text-align: center; 
+    position: static;
+    left: auto;
+  }
+  
+  /* Images */
+  img { 
+    max-width: 100%; 
     height: auto; 
-    pointer-events: none; 
+    display: block; 
+    margin: 12px auto; 
   }
-
-  .poem blockquote p {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin: 15px 0;
+  
+  /* Checklist */
+  .checklist ul { 
+    margin: 24px auto 0 auto; 
+    padding: 0; 
+    text-align: center;
   }
-
-  .checklist {
-    margin: 20px 15px;
-    padding: 15px;
+  .checklist li { margin-bottom: 12px; }
+  .checklist { 
+    margin: 20px auto; 
+    padding: 15px; 
+    text-align: center;
   }
-
-  .checklist h3 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+  
+  /* Simple dropdown */
+  .simple-dropdown { 
+    text-align: center; 
+    margin: 16px auto 0 auto; 
+    text-align: center;
   }
-
-  .checklist label {
-    font-size: 0.9rem;
-    margin: 8px 0;
-    padding-left: 8px; /* Añadir más espacio entre checkbox y texto */
+  
+  /* Floating gallery */
+  .floating-gallery { 
+    width: 100%; 
+    margin: 0 auto; 
+    text-align: center;
   }
-
-  .song-select {
-    margin: 20px 15px;
-    padding: 15px;
+  .floating-gallery figure { 
+    width: 45vw; 
+    margin: 0 auto;
   }
-
-  .song-select h3 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+  .floating-gallery figure.big-figure { 
+    width: 52.5vw; 
+    margin: 0 auto;
   }
-
-  .song-select select {
-    font-size: 0.9rem;
-    padding: 8px 12px;
+  
+  /* Poem and blockquote */
+  .poem, blockquote { 
+    margin: 0 auto; 
+    max-width: 92vw; 
+    text-align: center;
+  }
+  
+  /* Main column reset - PROBLEMA 1: SOLUCIONADO COMPLETAMENTE */
+  .main-column { 
+    margin: 0 auto; 
+    padding: 12px; 
+    max-width: 92vw; 
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* Home logo */
+  .home-logo { 
+    position: fixed; 
+    top: 8px; 
+    left: 8px; 
+    z-index: 1000; 
+  }
+  .home-logo img { width: 72px; height: auto; }
+  
+  /* Audio player */
+  #audio-player { 
+    width: 200px; 
+    height: 40px; 
+    right: 10px; 
+    bottom: 10px; 
+  }
+  
+  /* Lightbox */
+  #lightbox-image { 
+    max-width: 92vw; 
+    max-height: 70vh; 
+  }
+  
+  /* Cursive glow */
+  .cursive-glow { 
+    padding: 48px 0; 
+    font-size: 18px; 
+    text-align: center;
+  }
+  
+  /* Home specific */
+  body.home { 
+    min-height: 100dvh; 
+    background-attachment: fixed; 
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat; 
+  }
+  
+  /* Flies */
+  .fly { display: none !important; }
+  body.home .fly { display: block !important; }
+  
+  /* PROBLEMA 5: Asegurar que no haya scroll horizontal */
+  .container,
+  .main-content,
+  .content-box,
+  .checklist,
+  .simple-dropdown,
+  .type-container,
+  .poem,
+  blockquote {
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 }
 
-/**************** Page-specific spacing tweaks ****************/
-/* Page1: increase spacing only between title, type line, and following line */
+/* ===== PAGE-SPECIFIC MOBILE STYLES ===== */
+@media (max-width: 768px) {
+  /* Page 1 */
+  .page1 .content-box h1 { margin-bottom: 32px; }
+  .page1 .type-container { margin: 18px auto 28px auto; }
+  
+  /* Page 2 */
+  .page2 .content-box h1 { margin-bottom: 28px; }
+  
+  /* Page 3 */
+  .page3 .content-box h1 { margin-bottom: 28px; }
+  .page3 .type-container { margin: 16px auto 20px auto; }
+  .page3 .content-box img { 
+    margin: 20px auto 8px auto; 
+    max-width: 100%; 
+    height: auto; 
+    max-height: 400px;
+    object-fit: contain;
+  }
+
+  /* Page 1: imagen posterior a .content-box (hermana inmediata) */
+  .page1 + img {
+    display: block !important;
+    width: calc(100% - 28px) !important; /* 100% - (14px * 2) */
+    max-width: calc(100% - 28px) !important;
+    height: auto !important;
+    margin: 20px auto 8px auto !important;
+    max-height: 400px !important;
+    object-fit: contain !important;
+    padding: 0 14px !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Page 4 - Asegurar centrado perfecto */
+  .page4 .content-box h1 { margin-bottom: 28px; }
+  .page4 .content-box { 
+    margin: 12px auto; 
+    padding: 14px; 
+    width: 92vw; 
+    max-width: 92vw; 
+    text-align: center; 
+    transform: none; 
+    box-sizing: border-box;
+  }
+  .page4-poem { 
+    margin: 0 auto; 
+    max-width: 92vw; 
+    text-align: center;
+    transform: none;
+  }
+  .page4 blockquote { 
+    margin: 0 auto; 
+    text-align: center;
+    transform: none;
+  }
+}
+
+/* ===== PAGE-SPECIFIC DESKTOP STYLES ===== */
+
+/* Page 1: Desktop */
 .page1 .content-box h1 { margin-bottom: 32px; }
 .page1 .type-container { margin: 18px auto 28px auto; }
 
-/* Page2: spacing between h1 and the following line */
+/* Page 2: Desktop */
 .page2 .content-box h1 { margin-bottom: 28px; }
 
-/* Page3: ensure centered content and symmetric padding, especially on mobile */
-.page3 .content-box { text-align: center; }
-.page3 .content-box .main-content { margin: 0 auto; padding: 0; }
-.page3 .content-box img { display: block; margin: 32px auto 8px auto; }
+/* Page 3: Desktop */
+.page3 .content-box h1 { margin-bottom: 28px; }
+.page3 .type-container { margin: 16px auto 20px auto; }
 
-@media (max-width: 768px) {
-  .page3 .content-box { width: 92vw; margin: 12px auto; padding: 14px; text-align: center; transform: none; }
-  .page3 .content-box .main-content { margin: 0 auto; max-width: 92vw; padding: 0; transform: none; }
-  .page3 .type-container { margin: 16px auto 20px auto; }
-  .page3 .content-box img { margin: 20px auto 8px auto; max-width: 100%; height: auto; }
+/* Page 4: Desktop */
+.page4 .content-box h1 { margin-bottom: 28px; }
+.page4 .content-box { 
+  margin: 0 auto; 
+  text-align: center; 
+  transform: none; 
 }
 
+.page4-poem { 
+  margin: 0 auto; 
+  text-align: center; 
+  transform: none; 
+}
 
-@media (max-width: 768px) {
-  /* Page3: apply 27px left padding only on mobile; enforce with !important */
-  .page3 .content-box h1,
-  .page3 .content-box .type-container .type-h2,
-  .page3 .content-box img {
-    position: static !important;
-    left: auto !important;
-    padding-left: 27px !important;
-    box-sizing: border-box;
-  }
+.page4 blockquote { 
+  margin: 0 auto; 
+  text-align: center; 
+  transform: none; 
+}
+
+/* ===== SMALL MOBILE ADJUSTMENTS ===== */
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .home-logo img { width: 64px; }
+  .cursive-glow { padding-top: 56px; }
+  .simple-dropdown select { font-size: 14px; padding: 8px 10px; }
+  .floating-gallery figure { width: 54vw; }
+  .floating-gallery figure.big-figure { width: 66vw; }
 }

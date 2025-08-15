@@ -1,9 +1,11 @@
-// Simple Google Sheets API helper
-// Reads a sheet by name and returns an array of objects using the header row
+// Google Sheets API helper optimizado para rendimiento
+// Implementa caché inteligente, preload y mejor manejo de errores
 
-// Desactiva caché en desarrollo para ver cambios instantáneamente.
-// En producción, mantiene una caché corta para rendimiento.
-const CACHE_TTL_MS = import.meta.env.DEV ? 0 : 60 * 1000
+// TTL del caché: 5 minutos en desarrollo, 15 minutos en producción
+const CACHE_TTL_MS = import.meta.env.DEV ? 5 * 60 * 1000 : 15 * 60 * 1000
+
+// Caché en memoria para acceso instantáneo
+const memoryCache = new Map()
 
 function getEnv(key) {
   const value = import.meta.env[key]
@@ -21,53 +23,114 @@ function getCacheKey(sheetName) {
 export function setCachedSheetData(sheetName, data) {
   const payload = { ts: Date.now(), data }
   try {
-    // Si TTL es 0, no cachear
-    if (CACHE_TTL_MS === 0) return
+    // Caché en memoria para acceso instantáneo
+    memoryCache.set(sheetName, payload)
+    
+    // Caché en localStorage para persistencia
     localStorage.setItem(getCacheKey(sheetName), JSON.stringify(payload))
-  } catch {}
+  } catch (e) {
+    console.warn('[sheetsApi] Cache write failed:', e)
+  }
 }
 
 export function getCachedSheetData(sheetName) {
   try {
-    // Si TTL es 0, desactivar lectura de caché
-    if (CACHE_TTL_MS === 0) return null
+    // Primero intentar caché en memoria (más rápido)
+    const memoryData = memoryCache.get(sheetName)
+    if (memoryData && Date.now() - memoryData.ts <= CACHE_TTL_MS) {
+      return memoryData.data
+    }
+    
+    // Si no hay caché en memoria, intentar localStorage
     const raw = localStorage.getItem(getCacheKey(sheetName))
     if (!raw) return null
+    
     const parsed = JSON.parse(raw)
     if (!parsed?.ts || !parsed?.data) return null
     if (Date.now() - parsed.ts > CACHE_TTL_MS) return null
+    
+    // Restaurar en caché de memoria
+    memoryCache.set(sheetName, parsed)
     return parsed.data
-  } catch {
+  } catch (e) {
+    console.warn('[sheetsApi] Cache read failed:', e)
     return null
   }
+}
+
+// Preload de datos para mejorar la experiencia del usuario
+const preloadQueue = new Set()
+const preloadPromises = new Map()
+
+export async function preloadSheetData(sheetName) {
+  if (preloadQueue.has(sheetName)) return
+  if (preloadPromises.has(sheetName)) return preloadPromises.get(sheetName)
+  
+  preloadQueue.add(sheetName)
+  const promise = fetchSheetData(sheetName).then(data => {
+    preloadQueue.delete(sheetName)
+    return data
+  })
+  
+  preloadPromises.set(sheetName, promise)
+  return promise
 }
 
 export async function fetchSheetData(sheetName) {
   const apiKey = getEnv('VITE_GOOGLE_SHEETS_API_KEY')
   const spreadsheetId = getEnv('VITE_SPREADSHEET_ID')
+  
   if (!apiKey || !spreadsheetId) {
     console.warn('[sheetsApi] Missing API key or Spreadsheet ID')
     return []
   }
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(sheetName)}?key=${encodeURIComponent(apiKey)}`
-  const res = await fetch(url)
-  if (!res.ok) {
-    console.warn('[sheetsApi] Failed to fetch', sheetName, res.status)
+  
+  try {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(sheetName)}?key=${encodeURIComponent(apiKey)}`
+    
+    // Timeout de 10 segundos para evitar esperas infinitas
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
+    
+    const res = await fetch(url, { 
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'Cache-Control': 'max-age=300' // 5 minutos de caché HTTP
+      }
+    })
+    
+    clearTimeout(timeoutId)
+    
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+    }
+    
+    const json = await res.json()
+    const values = json?.values || []
+    
+    if (values.length === 0) return []
+    
+    const headers = values[0]
+    const rows = values.slice(1)
+    
+    const objects = rows.map((row) => {
+      const obj = {}
+      headers.forEach((h, idx) => {
+        obj[String(h).trim()] = row[idx] ?? ''
+      })
+      return obj
+    })
+    
+    return objects
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      console.warn('[sheetsApi] Request timeout for', sheetName)
+    } else {
+      console.error('[sheetsApi] Fetch failed for', sheetName, e)
+    }
     return []
   }
-  const json = await res.json()
-  const values = json?.values || []
-  if (values.length === 0) return []
-  const headers = values[0]
-  const rows = values.slice(1)
-  const objects = rows.map((row) => {
-    const obj = {}
-    headers.forEach((h, idx) => {
-      obj[String(h).trim()] = row[idx] ?? ''
-    })
-    return obj
-  })
-  return objects
 }
 
 export function processImageUrl(url) {
@@ -76,4 +139,35 @@ export function processImageUrl(url) {
   if (/^https?:\/\//i.test(trimmed) || /^data:/i.test(trimmed)) return trimmed
   const base = import.meta.env.BASE_URL || '/'
   return `${base}${trimmed.replace(/^\/+/, '')}`
-} 
+}
+
+// Limpiar caché expirado
+export function cleanupExpiredCache() {
+  try {
+    const now = Date.now()
+    const keys = Object.keys(localStorage)
+    
+    keys.forEach(key => {
+      if (key.startsWith('sheets:')) {
+        try {
+          const data = JSON.parse(localStorage.getItem(key))
+          if (data?.ts && (now - data.ts > CACHE_TTL_MS)) {
+            localStorage.removeItem(key)
+          }
+        } catch {}
+      }
+    })
+    
+    // Limpiar caché en memoria
+    for (const [key, value] of memoryCache.entries()) {
+      if (now - value.ts > CACHE_TTL_MS) {
+        memoryCache.delete(key)
+      }
+    }
+  } catch (e) {
+    console.warn('[sheetsApi] Cache cleanup failed:', e)
+  }
+}
+
+// Ejecutar limpieza cada 5 minutos
+setInterval(cleanupExpiredCache, 5 * 60 * 1000) 

@@ -7,7 +7,7 @@ import FloatingGallery from './components/FloatingGallery'
 import Lightbox from './components/Lightbox'
 import HoverTrail from './components/HoverTrail'
 import { useSheetData } from './hooks/useSheetData'
-import { processImageUrl } from './utils/sheetsApi'
+import { processImageUrl, preloadSheetData } from './utils/sheetsApi'
 
 const base = import.meta.env.BASE_URL
 
@@ -50,11 +50,25 @@ function AudioPlayer() {
 function LayoutShell({ children }) {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  
   useEffect(() => {
     if (isHome) document.body.classList.add('home')
     else document.body.classList.remove('home')
   }, [isHome])
-  useEffect(() => { window.scrollTo(0, 0) }, [location.pathname])
+  
+  useEffect(() => { 
+    window.scrollTo(0, 0) 
+  }, [location.pathname])
+  
+  // Preload de datos para mejorar la experiencia del usuario
+  useEffect(() => {
+    // Preload de todas las hojas en segundo plano
+    const sheets = ['page1_je_mappelle_aurore', 'page2_topographie_etrange', 'page3_reliques_reve', 'page4_memoires_mont_songe']
+    sheets.forEach(sheet => {
+      preloadSheetData(sheet).catch(() => {}) // Ignorar errores del preload
+    })
+  }, [])
+  
   return (
     <div className="container cursive-glow">
       <HoverTrail />
@@ -225,7 +239,18 @@ function Page3() {
           </div>
 
           {imageUrl && (
-            <img src={imageUrl} height="600" style={{ margin: '40px 5px 5px 5px' }} alt="" />
+            <img 
+              src={imageUrl} 
+              alt="" 
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+                display: 'block',
+                margin: '20px auto',
+                maxHeight: '400px',
+                objectFit: 'contain'
+              }}
+            />
           )}
         </div>
         <div className="checklist">
@@ -247,7 +272,7 @@ function Page4() {
   const mainContent = typedMain?.content || ''
   return (
     <Layout>
-      <div className="content-box">
+      <div className="content-box page4">
         <h1>Mémoires du Mont Songe</h1>
         {introContent && (
           <blockquote>
@@ -263,7 +288,7 @@ function Page4() {
         )}
       </div>
       {mainContent && (
-        <div className="poem">
+        <div className="poem page4-poem">
           <blockquote>
             {mainContent.split(/\n\n+/).map((para, idx) => (
               <p key={idx}>{para}</p>
