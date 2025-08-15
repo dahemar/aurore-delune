@@ -392,7 +392,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
 @media (max-width: 768px) {
   /* Page 1 - Margen superior para evitar superposición con orquídea */
   .page1 .content-box { 
-    margin-top: 80px; 
+    margin-top: 100px; 
     margin-bottom: 32px; 
   }
   .page1 .content-box h1 { margin-bottom: 32px; }
@@ -400,14 +400,14 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   
   /* Page 2 - Margen superior para evitar superposición con orquídea */
   .page2 .content-box { 
-    margin-top: 80px; 
+    margin-top: 100px; 
     margin-bottom: 32px; 
   }
   .page2 .content-box h1 { margin-bottom: 28px; }
   
   /* Page 3 - Margen superior para evitar superposición con orquídea */
   .page3 .content-box { 
-    margin-top: 80px; 
+    margin-top: 100px; 
     margin-bottom: 32px; 
   }
   .page3 .content-box h1 { margin-bottom: 28px; }
@@ -435,7 +435,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   
   /* Page 4 - Margen superior para evitar superposición con orquídea */
   .page4 .content-box { 
-    margin: 80px auto 32px auto; 
+    margin: 100px auto 32px auto; 
     padding: 14px; 
     width: 92vw; 
     max-width: 92vw; 
