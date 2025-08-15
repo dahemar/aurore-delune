@@ -5,6 +5,9 @@ body {
   padding: 0;
   position: relative;
   overflow-x: hidden;
+  /* Prevent viewport resize during load */
+  min-height: 100vh;
+  min-width: 100vw;
 }
 
 /* Background image using pseudo-element for better mobile compatibility */
@@ -13,14 +16,19 @@ body::before {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-image: url("/aurore-delune/images/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   z-index: -1;
   will-change: transform;
+  /* Prevent background jump on mobile */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Neutralizar estilos del template (#root) en móvil */
@@ -177,6 +185,35 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    /* Prevent viewport jump on iOS */
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    min-width: 100vw;
+  }
+}
+
+/* Prevent background resize during page load on mobile */
+@media (max-width: 768px) {
+  body::before {
+    /* Lock dimensions to prevent resize */
+    width: 100vw !important;
+    height: 100vh !important;
+    min-width: 100vw !important;
+    min-height: 100vh !important;
+    /* Force hardware acceleration */
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    /* Prevent any scaling */
+    background-attachment: scroll;
+    -webkit-background-attachment: scroll;
+  }
+  
+  /* Prevent body size changes during load */
+  body {
+    min-height: 100vh;
+    min-width: 100vw;
+    overflow-x: hidden;
   }
 }
 
