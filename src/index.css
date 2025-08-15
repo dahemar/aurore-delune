@@ -267,7 +267,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   
   /* Content box centering */
   .content-box { 
-    margin: 12px auto; 
+    margin: 160px auto 12px auto; 
     padding: 14px; 
     width: 100%;
     max-width: 92vw; 
