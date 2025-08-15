@@ -246,8 +246,8 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center; 
     margin: 0 auto; 
   }
-  h1 { font-size: 1.6rem; margin-bottom: 24px; }
-  h2 { font-size: 1.1rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 24px; }
+  h2 { font-size: 1.0rem; }
   
   /* Type container - PROBLEMA 3: position relative SOLUCIONADO */
   .type-container { 
