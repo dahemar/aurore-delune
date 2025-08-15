@@ -428,6 +428,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
 
 /* Page 2: Desktop */
 .page2 .content-box h1 { margin-bottom: 28px; }
+.page2 .type-container { margin: 18px auto 28px auto; }
 
 /* Page 3: Desktop */
 .page3 .content-box h1 { margin-bottom: 28px; }
