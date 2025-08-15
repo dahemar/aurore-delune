@@ -283,7 +283,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center; 
     margin: 0 auto; 
   }
-  h1 { font-size: 1.5rem; margin-bottom: 24px; }
+  h1 { font-size: 1.5rem; margin-top: 20px; margin-bottom: 24px; }
   h2 { font-size: 1.0rem; }
   
   /* Type container - PROBLEMA 3: position relative SOLUCIONADO */
@@ -308,58 +308,58 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   }
   
   /* Images - Optimized for faster loading */
-img { 
-  max-width: 100%; 
-  height: auto; 
-  display: block; 
-  margin: 12px auto; 
-  /* Performance optimizations */
-  will-change: auto;
-  contain: layout style paint;
-  /* Prevent layout shifts */
-  aspect-ratio: attr(width) / attr(height);
-  /* Smooth loading */
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-/* Show images when loaded */
-img.loaded {
-  opacity: 1;
-}
-
-/* Preload critical images */
-img[data-preload="true"] {
-  opacity: 1;
-  transition: none;
-}
-
-/* Image loading optimizations */
-img {
-  /* Prevent layout shifts */
-  contain: layout style paint;
-  /* Optimize rendering */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  /* Hardware acceleration */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  /* Smooth scaling */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Lazy loading placeholder */
-img:not(.loaded):not(.preload) {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
+  img { 
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+    margin: 12px auto; 
+    /* Performance optimizations */
+    will-change: auto;
+    contain: layout style paint;
+    /* Prevent layout shifts */
+    aspect-ratio: attr(width) / attr(height);
+    /* Smooth loading */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  /* Show images when loaded */
+  img.loaded {
+    opacity: 1;
+  }
+  
+  /* Preload critical images */
+  img[data-preload="true"] {
+    opacity: 1;
+    transition: none;
+  }
+  
+  /* Image loading optimizations */
+  img {
+    /* Prevent layout shifts */
+    contain: layout style paint;
+    /* Optimize rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Smooth scaling */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Lazy loading placeholder */
+  img:not(.loaded):not(.preload) {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
   
   /* Checklist */
   .checklist ul { 
@@ -600,3 +600,13 @@ img:not(.loaded):not(.preload) {
   .floating-gallery figure { width: 54vw; }
   .floating-gallery figure.big-figure { width: 66vw; }
 }
+
+/* Remove forced image opacity and placeholder */
+@media (max-width: 768px) {
+  img { opacity: 1 !important; transition: none !important; }
+  img.loaded { opacity: 1 !important; }
+  img:not(.loaded):not(.preload) { background: none !important; animation: none !important; }
+}
+
+/* Global reset to ensure images are visible */
+img { opacity: 1 !important; }
