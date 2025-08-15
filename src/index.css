@@ -390,14 +390,26 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
 
 /* ===== PAGE-SPECIFIC MOBILE STYLES ===== */
 @media (max-width: 768px) {
-  /* Page 1 */
+  /* Page 1 - Margen superior para evitar superposición con orquídea */
+  .page1 .content-box { 
+    margin-top: 80px; 
+    margin-bottom: 32px; 
+  }
   .page1 .content-box h1 { margin-bottom: 32px; }
   .page1 .type-container { margin: 18px auto 28px auto; }
   
-  /* Page 2 */
+  /* Page 2 - Margen superior para evitar superposición con orquídea */
+  .page2 .content-box { 
+    margin-top: 80px; 
+    margin-bottom: 32px; 
+  }
   .page2 .content-box h1 { margin-bottom: 28px; }
   
-  /* Page 3 */
+  /* Page 3 - Margen superior para evitar superposición con orquídea */
+  .page3 .content-box { 
+    margin-top: 80px; 
+    margin-bottom: 32px; 
+  }
   .page3 .content-box h1 { margin-bottom: 28px; }
   .page3 .type-container { margin: 16px auto 20px auto; }
   .page3 .content-box img { 
@@ -421,10 +433,9 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     box-sizing: border-box !important;
   }
   
-  /* Page 4 - Asegurar centrado perfecto */
-  .page4 .content-box h1 { margin-bottom: 28px; }
+  /* Page 4 - Margen superior para evitar superposición con orquídea */
   .page4 .content-box { 
-    margin: 12px auto; 
+    margin: 80px auto 32px auto; 
     padding: 14px; 
     width: 92vw; 
     max-width: 92vw; 
@@ -432,6 +443,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     transform: none; 
     box-sizing: border-box;
   }
+  .page4 .content-box h1 { margin-bottom: 28px; }
   .page4-poem { 
     margin: 0 auto; 
     max-width: 92vw; 
