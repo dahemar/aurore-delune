@@ -147,14 +147,7 @@ export default function FloatingGallery({ items }) {
   const capStyle = { color: '#fff', textShadow: '0 1px 2px #000', padding: '4px 6px', borderRadius: 4, fontSize: '1.1rem' }
   const capStyleBig = { ...capStyle, fontSize: '1.3rem', fontWeight: 'bold' }
 
-  const defaultItems = [
-    { src: `${base}images/610c1761-8c76-4285-99ae-10ce1a644614.jpg`, caption: 'But the trees spread darkness for a wandering beam of sun', size: 'normal' },
-    { src: `${base}images/38340221-c73f-4f8a-a87a-3a18bcc629a6.jpg`, caption: 'The Sick Garden', size: 'big' },
-    { src: `${base}images/frog.jpeg`, caption: 'In memoriam', size: 'normal' },
-    { src: `${base}images/P1082183.JPG`, caption: 'Sacrifice', size: 'normal' },
-  ]
-
-  const renderItems = (items && items.length ? items : defaultItems)
+  const renderItems = items && items.length > 0 ? items : []
 
   // altura del contenedor: más alta en móvil
   const isMobileRender = typeof window !== 'undefined' && window.innerWidth <= 768

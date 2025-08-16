@@ -169,11 +169,25 @@ function Home() { return (<Layout><Checklist /><SongSelect /></Layout>) }
 function Page1() {
   const { data } = useSheetData('page1_je_mappelle_aurore')
   const first = Array.isArray(data) && data.length > 0 ? data[0] : null
-  const title = first?.title || "Je m'appelle Aurore Delune"
-  const subtitle = first?.content || 'Comment vous appelez-vous ?'
-  const imageUrl = first?.image_url ? processImageUrl(first.image_url) : `${base}images/19669_221989538788_6246420_n.jpg`
-  const formTitle = first?.form_title || ''
-  const formDescription = first?.form_description || ''
+  
+  // Only render if we have data
+  if (!first) {
+    return (
+      <Layout>
+        <div className="content-box page1">
+          <h1>Chargement...</h1>
+        </div>
+        <Checklist />
+        <SongSelect />
+      </Layout>
+    )
+  }
+  
+  const title = first.title
+  const subtitle = first.content
+  const imageUrl = first.image_url ? processImageUrl(first.image_url) : null
+  const formTitle = first.form_title
+  const formDescription = first.form_description
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -225,8 +239,22 @@ function Page1() {
 function Page2() { 
   const { data } = useSheetData('page2_topographie_etrange')
   const first = Array.isArray(data) && data.length > 0 ? data[0] : null
-  const title = first?.title || 'Topographie de l\'étrange'
-  const subtitle = first?.content || 'Du sacré dans le profane, de la beauté dans la décrépitude'
+  
+  // Only render if we have data
+  if (!first) {
+    return (
+      <Layout>
+        <div className="content-box page2">
+          <h1>Chargement...</h1>
+        </div>
+        <Checklist />
+        <SongSelect />
+      </Layout>
+    )
+  }
+  
+  const title = first.title
+  const subtitle = first.content
   
   // Get all images from the sheet for the floating gallery (skip first row if it's used for title/subtitle)
   const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map(row => ({
@@ -245,7 +273,7 @@ function Page2() {
           </div>
         )}
       </div>
-      <FloatingGallery items={galleryItems} />
+      {galleryItems.length > 0 && <FloatingGallery items={galleryItems} />}
       <Checklist />
       <SongSelect />
     </Layout>
@@ -254,9 +282,24 @@ function Page2() {
 function Page3() {
   const { data } = useSheetData('page3_reliques_reve')
   const row = Array.isArray(data) && data.length > 0 ? data[0] : null
-  const title = row?.title || 'Reliques du rêve'
-  const typewriterText = row?.content || "A la lisière du rêve et du mythe, de l'humain et de l'autre"
-  const imageUrl = row?.image_url ? processImageUrl(row.image_url) : `${base}images/P1082181.JPG`
+  
+  // Only render if we have data
+  if (!row) {
+    return (
+      <Layout>
+        <div className="content-box page3">
+          <h1>Chargement...</h1>
+        </div>
+        <Checklist />
+        <SongSelect />
+      </Layout>
+    )
+  }
+  
+  const title = row.title
+  const typewriterText = row.content
+  const imageUrl = row.image_url ? processImageUrl(row.image_url) : null
+  
   return (
     <Layout>
       <div className="content-box page3">
@@ -294,10 +337,25 @@ function Page3() {
 function Page4() {
   const { data } = useSheetData('page4_memoires_mont_songe')
   const rows = Array.isArray(data) ? data : []
+  
+  // Only render if we have data
+  if (!rows || rows.length === 0) {
+    return (
+      <Layout>
+        <div className="content-box page4">
+          <h1>Chargement...</h1>
+        </div>
+        <Checklist />
+        <SongSelect />
+      </Layout>
+    )
+  }
+  
   const typedIntro = rows.find((r) => String(r.text_type).toLowerCase() === 'introductory_quote')
   const typedMain = rows.find((r) => String(r.text_type).toLowerCase() === 'main_content')
-  const introContent = typedIntro?.content || ''
-  const mainContent = typedMain?.content || ''
+  const introContent = typedIntro?.content
+  const mainContent = typedMain?.content
+  
   return (
     <Layout>
       <div className="content-box page4">
