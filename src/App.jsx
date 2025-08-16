@@ -241,11 +241,22 @@ function Page2() {
   const subtitle = 'Du sacré dans le profane, de la beauté dans la décrépitude'
   
   // Get all images from the sheet for the floating gallery (skip first row if it's used for title/subtitle)
-  const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map(row => ({
-    src: row.image_url ? processImageUrl(row.image_url) : '',
-    caption: row.caption || '',
-    size: row.size || 'normal'
-  })).filter(item => item.src) : []
+  const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map(row => {
+    console.log('Processing row:', row)
+    console.log('Original image_url:', row.image_url)
+    const processedUrl = row.image_url ? processImageUrl(row.image_url) : ''
+    console.log('Processed URL:', processedUrl)
+    return {
+      src: processedUrl,
+      caption: row.caption || '',
+      size: row.size || 'normal'
+    }
+  }).filter(item => {
+    console.log('Filtering item:', item)
+    return item.src
+  }) : []
+  
+  console.log('Final galleryItems:', galleryItems)
   
   return (
     <Layout>
