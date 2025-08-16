@@ -500,7 +500,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   
   /* Page 2 - Margen superior para evitar superposición con orquídea */
   .page2 .content-box { 
-    margin-top: 60px; 
+    margin-top: 40px; 
     margin-bottom: 32px; 
   }
   .page2 .content-box h1 { margin-bottom: 28px; }

@@ -144,7 +144,7 @@ export default function FloatingGallery({ items }) {
   const figStyle = { position: 'absolute', width: 'clamp(120px, 28vw, 250px)', margin: 0, cursor: 'grab', userSelect: 'none' }
   const bigStyle = { ...figStyle, width: 'clamp(150px, 34vw, 350px)' }
   const imgStyle = { width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }
-  const capStyle = { color: '#fff', textShadow: '0 1px 2px #000', background: 'rgba(0,0,0,0.35)', padding: '4px 6px', borderRadius: 4, fontSize: '1.1rem' }
+  const capStyle = { color: '#fff', textShadow: '0 1px 2px #000', padding: '4px 6px', borderRadius: 4, fontSize: '1.1rem' }
   const capStyleBig = { ...capStyle, fontSize: '1.3rem', fontWeight: 'bold' }
 
   const defaultItems = [
