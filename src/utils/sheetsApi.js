@@ -136,6 +136,21 @@ export async function fetchSheetData(sheetName) {
 export function processImageUrl(url) {
   if (!url) return url
   const trimmed = url.trim()
+  
+  // Check for BBCode format [img]url[/img] and extract the URL
+  const bbcodeMatch = trimmed.match(/\[img\](.*?)\[\/img\]/i)
+  if (bbcodeMatch) {
+    const extractedUrl = bbcodeMatch[1].trim()
+    // If the extracted URL is already a full URL, return it directly
+    if (/^https?:\/\//i.test(extractedUrl) || /^data:/i.test(extractedUrl)) {
+      return extractedUrl
+    }
+    // If it's a relative path, process it normally
+    const base = import.meta.env.BASE_URL || '/'
+    return `${base}${extractedUrl.replace(/^\/+/, '')}`
+  }
+  
+  // Original logic for direct URLs
   if (/^https?:\/\//i.test(trimmed) || /^data:/i.test(trimmed)) return trimmed
   const base = import.meta.env.BASE_URL || '/'
   return `${base}${trimmed.replace(/^\/+/, '')}`
