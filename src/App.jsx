@@ -222,7 +222,35 @@ function Page1() {
     </Layout>
   )
 }
-function Page2() { return (<Layout><div className="content-box page2"><h1>Topographie de l'étrange</h1><div className="type-container"><Typewriter text="Du sacré dans le profane, de la beauté dans la décrépitude" /></div></div><FloatingGallery /><Checklist /><SongSelect /></Layout>) }
+function Page2() { 
+  const { data } = useSheetData('page2_topographie_etrange')
+  const first = Array.isArray(data) && data.length > 0 ? data[0] : null
+  const title = first?.title || 'Topographie de l\'étrange'
+  const subtitle = first?.content || 'Du sacré dans le profane, de la beauté dans la décrépitude'
+  
+  // Get all images from the sheet for the floating gallery (skip first row if it's used for title/subtitle)
+  const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map(row => ({
+    src: row.image_url ? processImageUrl(row.image_url) : '',
+    caption: row.caption || '',
+    size: row.size || 'normal'
+  })).filter(item => item.src) : []
+  
+  return (
+    <Layout>
+      <div className="content-box page2">
+        <h1>{title}</h1>
+        {subtitle && (
+          <div className="type-container">
+            <Typewriter text={subtitle} />
+          </div>
+        )}
+      </div>
+      <FloatingGallery items={galleryItems} />
+      <Checklist />
+      <SongSelect />
+    </Layout>
+  ) 
+}
 function Page3() {
   const { data } = useSheetData('page3_reliques_reve')
   const row = Array.isArray(data) && data.length > 0 ? data[0] : null
