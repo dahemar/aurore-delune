@@ -253,10 +253,18 @@ function Page2() {
     }
   }).filter(item => {
     console.log('Filtering item:', item)
-    return item.src
+    const hasValidSrc = item.src && item.src.trim() !== ''
+    console.log('Item has valid src?', hasValidSrc, 'src:', item.src)
+    if (!hasValidSrc) {
+      console.warn('Filtering out item due to invalid src:', item)
+    }
+    return hasValidSrc
   }) : []
   
   console.log('Final galleryItems:', galleryItems)
+  console.log('Total rows in data:', data?.length || 0)
+  console.log('Rows after skipping first:', data?.slice(1)?.length || 0)
+  console.log('Final filtered items:', galleryItems.length)
   
   return (
     <Layout>
