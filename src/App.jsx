@@ -241,30 +241,48 @@ function Page2() {
   const subtitle = 'Du sacré dans le profane, de la beauté dans la décrépitude'
   
   // Get all images from the sheet for the floating gallery (skip first row if it's used for title/subtitle)
-  const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map(row => {
-    console.log('Processing row:', row)
+  console.log('Raw data from Google Sheets:', data)
+  console.log('Data length:', data?.length || 0)
+  
+  const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map((row, index) => {
+    const rowNumber = index + 2 // +2 because we skip first row and arrays are 0-indexed
+    console.log(`--- Processing Row ${rowNumber} ---`)
+    console.log('Row data:', row)
     console.log('Original image_url:', row.image_url)
+    
     const processedUrl = row.image_url ? processImageUrl(row.image_url) : ''
     console.log('Processed URL:', processedUrl)
-    return {
+    
+    const item = {
       src: processedUrl,
       caption: row.caption || '',
       size: row.size || 'normal'
     }
-  }).filter(item => {
-    console.log('Filtering item:', item)
+    
+    console.log('Created item:', item)
+    return item
+  }).filter((item, index) => {
+    const rowNumber = index + 2
+    console.log(`--- Filtering Row ${rowNumber} ---`)
+    console.log('Item to filter:', item)
+    
     const hasValidSrc = item.src && item.src.trim() !== ''
     console.log('Item has valid src?', hasValidSrc, 'src:', item.src)
+    
     if (!hasValidSrc) {
-      console.warn('Filtering out item due to invalid src:', item)
+      console.warn(`Row ${rowNumber} filtered out due to invalid src:`, item)
+    } else {
+      console.log(`Row ${rowNumber} passed filter successfully`)
     }
+    
     return hasValidSrc
   }) : []
   
-  console.log('Final galleryItems:', galleryItems)
+  console.log('=== FINAL RESULTS ===')
   console.log('Total rows in data:', data?.length || 0)
   console.log('Rows after skipping first:', data?.slice(1)?.length || 0)
   console.log('Final filtered items:', galleryItems.length)
+  console.log('Final galleryItems:', galleryItems)
   
   return (
     <Layout>
