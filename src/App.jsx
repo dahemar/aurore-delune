@@ -240,12 +240,12 @@ function Page2() {
   const title = 'Topographie de l\'étrange'
   const subtitle = 'Du sacré dans le profane, de la beauté dans la décrépitude'
   
-  // Get all images from the sheet for the floating gallery (skip first row if it's used for title/subtitle)
+  // Get all images from the sheet for the floating gallery (do NOT skip first row; headers are already stripped by the API)
   console.log('Raw data from Google Sheets:', data)
   console.log('Data length:', data?.length || 0)
   
-  const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map((row, index) => {
-    const rowNumber = index + 2 // +2 because we skip first row and arrays are 0-indexed
+  const galleryItems = Array.isArray(data) && data.length > 0 ? data.map((row, index) => {
+    const rowNumber = index + 2 // sheet row index for reference
     console.log(`--- Processing Row ${rowNumber} ---`)
     console.log('Row data:', row)
     console.log('Original image_url:', row.image_url)
@@ -279,8 +279,7 @@ function Page2() {
   }) : []
   
   console.log('=== FINAL RESULTS ===')
-  console.log('Total rows in data:', data?.length || 0)
-  console.log('Rows after skipping first:', data?.slice(1)?.length || 0)
+  console.log('Total rows returned:', data?.length || 0)
   console.log('Final filtered items:', galleryItems.length)
   console.log('Final galleryItems:', galleryItems)
   
