@@ -141,11 +141,18 @@ export default function FloatingGallery({ items }) {
   }, [])
 
   // tamaños responsive usando clamp para móvil/desktop
+  const smallStyle = { position: 'absolute', width: 'clamp(80px, 20vw, 180px)', margin: 0, cursor: 'grab', userSelect: 'none' }
+  const mediumStyle = { position: 'absolute', width: 'clamp(100px, 24vw, 220px)', margin: 0, cursor: 'grab', userSelect: 'none' }
   const figStyle = { position: 'absolute', width: 'clamp(120px, 28vw, 250px)', margin: 0, cursor: 'grab', userSelect: 'none' }
   const bigStyle = { ...figStyle, width: 'clamp(150px, 34vw, 350px)' }
+  const largeStyle = { ...figStyle, width: 'clamp(180px, 40vw, 450px)' }
+  const extraLargeStyle = { ...figStyle, width: 'clamp(220px, 48vw, 550px)' }
+  
   const imgStyle = { width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }
   const capStyle = { color: '#fff', textShadow: '0 1px 2px #000', padding: '4px 6px', borderRadius: 4, fontSize: '1.1rem' }
   const capStyleBig = { ...capStyle, fontSize: '1.3rem', fontWeight: 'bold' }
+  const capStyleLarge = { ...capStyle, fontSize: '1.5rem', fontWeight: 'bold' }
+  const capStyleExtraLarge = { ...capStyle, fontSize: '1.7rem', fontWeight: 'bold' }
 
   const renderItems = items && items.length > 0 ? items : []
 
@@ -160,11 +167,41 @@ export default function FloatingGallery({ items }) {
       style={{ position: 'relative', width: '100%', height: isMobileRender ? '110vh' : '100vh', overflow: 'visible', cursor: 'grab', margin: '0 auto', padding: 0 }}
     >
       {renderItems.map((item, idx) => {
-        const isBig = String(item.size).toLowerCase() === 'big'
+        const size = String(item.size).toLowerCase()
+        let figureStyle
+        let captionStyle
+        
+        // Apply different styles based on size
+        switch (size) {
+          case 'small':
+            figureStyle = smallStyle
+            captionStyle = capStyle
+            break
+          case 'medium':
+            figureStyle = mediumStyle
+            captionStyle = capStyle
+            break
+          case 'big':
+            figureStyle = bigStyle
+            captionStyle = capStyleBig
+            break
+          case 'large':
+            figureStyle = largeStyle
+            captionStyle = capStyleLarge
+            break
+          case 'extra-large':
+            figureStyle = extraLargeStyle
+            captionStyle = capStyleExtraLarge
+            break
+          default: // 'normal' or any other value
+            figureStyle = figStyle
+            captionStyle = capStyle
+        }
+        
         return (
-          <figure key={idx} className={isBig ? 'big-figure' : ''} style={{ ...(isBig ? bigStyle : figStyle) }}>
+          <figure key={idx} style={figureStyle}>
             <img src={item.src} alt="" draggable={false} style={imgStyle} />
-            <figcaption style={isBig ? capStyleBig : capStyle}>{item.caption}</figcaption>
+            <figcaption style={captionStyle}>{item.caption}</figcaption>
           </figure>
         )
       })}

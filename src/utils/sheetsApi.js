@@ -1,8 +1,8 @@
 // Google Sheets API helper optimizado para rendimiento
 // Implementa caché inteligente, preload y mejor manejo de errores
 
-// TTL del caché: 5 minutos en desarrollo, 15 minutos en producción
-const CACHE_TTL_MS = import.meta.env.DEV ? 5 * 60 * 1000 : 15 * 60 * 1000
+// TTL del caché: 2 minutos en desarrollo, 5 minutos en producción (más rápido)
+const CACHE_TTL_MS = import.meta.env.DEV ? 2 * 60 * 1000 : 5 * 60 * 1000
 
 // Caché en memoria para acceso instantáneo
 const memoryCache = new Map()

@@ -174,9 +174,6 @@ function Page1() {
   if (!first) {
     return (
       <Layout>
-        <div className="content-box page1">
-          <h1>Chargement...</h1>
-        </div>
         <Checklist />
         <SongSelect />
       </Layout>
@@ -240,21 +237,8 @@ function Page2() {
   const { data } = useSheetData('page2_topographie_etrange')
   const first = Array.isArray(data) && data.length > 0 ? data[0] : null
   
-  // Only render if we have data
-  if (!first) {
-    return (
-      <Layout>
-        <div className="content-box page2">
-          <h1>Chargement...</h1>
-        </div>
-        <Checklist />
-        <SongSelect />
-      </Layout>
-    )
-  }
-  
-  const title = first.title
-  const subtitle = first.content
+  const title = 'Topographie de l\'étrange'
+  const subtitle = 'Du sacré dans le profane, de la beauté dans la décrépitude'
   
   // Get all images from the sheet for the floating gallery (skip first row if it's used for title/subtitle)
   const galleryItems = Array.isArray(data) && data.length > 1 ? data.slice(1).map(row => ({
@@ -287,9 +271,6 @@ function Page3() {
   if (!row) {
     return (
       <Layout>
-        <div className="content-box page3">
-          <h1>Chargement...</h1>
-        </div>
         <Checklist />
         <SongSelect />
       </Layout>
@@ -342,9 +323,6 @@ function Page4() {
   if (!rows || rows.length === 0) {
     return (
       <Layout>
-        <div className="content-box page4">
-          <h1>Chargement...</h1>
-        </div>
         <Checklist />
         <SongSelect />
       </Layout>
