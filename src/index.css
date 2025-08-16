@@ -555,6 +555,11 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center;
     transform: none;
   }
+  
+  /* Bottom margin for all pages */
+  .page1, .page2, .page3, .page4 {
+    margin-bottom: 20px;
+  }
 }
 
 /* ===== PAGE-SPECIFIC DESKTOP STYLES ===== */
@@ -589,6 +594,11 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   margin: 0 auto; 
   text-align: center; 
   transform: none; 
+}
+
+/* Bottom margin for all pages - Desktop */
+.page1, .page2, .page3, .page4 {
+  margin-bottom: 20px;
 }
 
 /* ===== SMALL MOBILE ADJUSTMENTS ===== */
