@@ -78,7 +78,7 @@ div {
 .checklist ul {
   list-style: none;
   padding: 0;
-  margin: 300px auto 0 auto !important;
+  margin: 300px auto 0 auto;
   text-align: center;
 }
 
@@ -374,10 +374,10 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center;
   }
   
-  /* Simple dropdown - Position near bottom of page on mobile */
+  /* Simple dropdown - Position very close to bottom edge on mobile */
   .simple-dropdown { 
     text-align: center; 
-    margin: 200px auto 0 auto; 
+    margin: 500px auto 0 auto; 
     text-align: center;
   }
   
