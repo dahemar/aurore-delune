@@ -4,7 +4,20 @@ const base = import.meta.env.BASE_URL
 
 export default function FloatingGallery({ items, onImageClick }) {
   const galleryRef = useRef(null)
-  const animRef = useRef({ draggingFigure: null, offsetX: 0, offsetY: 0, currentX: 0, currentY: 0, targetX: 0, targetY: 0, frame: 0, zTop: 10 })
+  const animRef = useRef({ 
+    draggingFigure: null, 
+    offsetX: 0, 
+    offsetY: 0, 
+    currentX: 0, 
+    currentY: 0, 
+    targetX: 0, 
+    targetY: 0, 
+    frame: 0, 
+    zTop: 10,
+    dragStartX: 0,
+    dragStartY: 0,
+    isDragging: false
+  })
 
   useEffect(() => {
     const gallery = galleryRef.current
@@ -66,6 +79,12 @@ export default function FloatingGallery({ items, onImageClick }) {
       const pointer = isTouch ? e.touches[0] : e
       const fig = document.elementFromPoint(pointer.clientX, pointer.clientY)?.closest('figure')
       if (!fig || !gallery.contains(fig)) return
+      
+      // Record starting position for drag detection
+      state.dragStartX = pointer.clientX
+      state.dragStartY = pointer.clientY
+      state.isDragging = false
+      
       state.draggingFigure = fig
       const rect = fig.getBoundingClientRect()
       const galleryRect = gallery.getBoundingClientRect()
@@ -94,6 +113,16 @@ export default function FloatingGallery({ items, onImageClick }) {
       const isTouch = e.type.startsWith('touch')
       const pointer = isTouch ? e.touches[0] : e
       const galleryRect = gallery.getBoundingClientRect()
+      
+      // Check if we're actually dragging (threshold of 5px)
+      const dragDistance = Math.sqrt(
+        Math.pow(pointer.clientX - state.dragStartX, 2) + 
+        Math.pow(pointer.clientY - state.dragStartY, 2)
+      )
+      
+      if (dragDistance > 5) {
+        state.isDragging = true
+      }
       
       // Allow images to go beyond container boundaries
       let newX = pointer.clientX - galleryRect.left - state.offsetX
@@ -125,6 +154,7 @@ export default function FloatingGallery({ items, onImageClick }) {
         state.draggingFigure.style.cursor = 'grab'
         state.draggingFigure = null
       }
+      state.isDragging = false
       cancelAnimationFrame(state.frame)
       document.removeEventListener('mousemove', onDrag)
       document.removeEventListener('mouseup', endDrag)
@@ -159,8 +189,9 @@ export default function FloatingGallery({ items, onImageClick }) {
   // altura del contenedor: más alta en móvil
   const isMobileRender = typeof window !== 'undefined' && window.innerWidth <= 768
 
-  const handleImageClick = (item) => {
-    if (onImageClick) {
+  const handleImageClick = (item, e) => {
+    // Only open lightbox if we're not dragging
+    if (!animRef.current.isDragging && onImageClick) {
       onImageClick(item)
     }
   }
@@ -208,7 +239,7 @@ export default function FloatingGallery({ items, onImageClick }) {
           <figure 
             key={idx} 
             style={figureStyle}
-            onClick={() => handleImageClick(item)}
+            onClick={(e) => handleImageClick(item, e)}
             className="clickable-image"
           >
             <img src={item.src} alt="" draggable={false} style={imgStyle} />

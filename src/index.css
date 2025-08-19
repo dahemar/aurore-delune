@@ -676,9 +676,9 @@ img { opacity: 1 !important; }
 #lightbox-image {
   max-width: 90%;
   max-height: 70vh;
-  border: 5px solid white;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 0px;
+  box-shadow: none;
   margin-bottom: 20px;
 }
 

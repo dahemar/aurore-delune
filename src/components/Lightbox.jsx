@@ -52,9 +52,9 @@ export default function Lightbox({ isOpen, imageSrc, imageCaption, imageDescript
           style={{
             maxWidth: '90%',
             maxHeight: '70vh',
-            border: '5px solid white',
-            borderRadius: '8px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+            border: 'none',
+            borderRadius: '0px',
+            boxShadow: 'none'
           }}
         />
         
