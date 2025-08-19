@@ -377,7 +377,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   /* Simple dropdown - Position to fit everything on one page without scrolling */
   .simple-dropdown { 
     text-align: center; 
-    margin: 400px auto 0 auto; 
+    margin: 350px auto 0 auto; 
     text-align: center;
   }
   
