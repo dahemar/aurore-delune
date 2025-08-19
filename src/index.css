@@ -374,10 +374,10 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center;
   }
   
-  /* Simple dropdown - Position very close to bottom edge on mobile */
+  /* Simple dropdown - Position to fit everything on one page without scrolling */
   .simple-dropdown { 
     text-align: center; 
-    margin: 500px auto 0 auto; 
+    margin: 400px auto 0 auto; 
     text-align: center;
   }
   
