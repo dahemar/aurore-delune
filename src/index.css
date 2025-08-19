@@ -660,7 +660,7 @@ img { opacity: 1 !important; }
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(101, 67, 33, 0.9); /* Changed to darker brown */
+  background: rgba(20, 15, 10, 0.95); /* Changed to almost black with subtle brown tint */
   display: flex;
   justify-content: center;
   align-items: center;
