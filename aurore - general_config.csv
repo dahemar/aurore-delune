@@ -1,0 +1,9 @@
+setting,value,value_eng,description
+site_title,Aurore Delune,Aurore Delune,Website title
+logo_image,images/orchidd.jpg,images/orchidd.jpg,Logo image
+background_image,images/background.jpg,images/background.jpg,Main background image
+audio_sfx_1,audio/1.m4a,audio/1.m4a,Sound effect 1
+audio_sfx_2,audio/2.m4a,audio/2.m4a,Sound effect 2
+audio_sfx_3,audio/3.m4a,audio/3.m4a,Sound effect 3
+audio_song_1,audio/song1.wav,audio/song1.wav,Song 1 - Stray
+audio_song_2,audio/song2.wav,audio/song2.wav,Song 2 - Deep Forest

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
@@ -10,6 +11,14 @@ import { useSheetData } from './hooks/useSheetData'
 import { processImageUrl, preloadSheetData } from './utils/sheetsApi'
 
 const base = import.meta.env.BASE_URL
+
+// Language context
+const LanguageContext = React.createContext('fr')
+
+function useLanguage() {
+  const location = useLocation()
+  return location.pathname.startsWith('/en') ? 'en' : 'fr'
+}
 
 function AudioPlayer() {
   const audioRef = useRef(null)
@@ -83,11 +92,34 @@ function LayoutShell({ children }) {
 function Checklist() {
   const location = useLocation()
   const path = location.pathname
+  const language = useLanguage()
+  
   const items = [
-    { id: 'item1', to: '/page1', label: "Je m'appelle Aurore Delune" },
-    { id: 'item2', to: '/page2', label: "Topographie de l'étrange" },
-    { id: 'item3', to: '/page3', label: 'Reliques du rêve' },
-    { id: 'item4', to: '/page4', label: 'Mémoires du Mont Songe' },
+    { 
+      id: 'item1', 
+      to: language === 'en' ? '/en/page1' : '/page1', 
+      label: language === 'en' ? "My name is Aurore Delune" : "Je m'appelle Aurore Delune" 
+    },
+    { 
+      id: 'item2', 
+      to: language === 'en' ? '/en/page2' : '/page2', 
+      label: language === 'en' ? "Topography of the Strange" : "Topographie de l'étrange" 
+    },
+    { 
+      id: 'item3', 
+      to: language === 'en' ? '/en/page3' : '/page3', 
+      label: language === 'en' ? 'Relics of the Dream' : 'Reliques du rêve' 
+    },
+    { 
+      id: 'item4', 
+      to: language === 'en' ? '/en/page4' : '/page4', 
+      label: language === 'en' ? 'Memories of Mount Songe' : 'Mémoires du Mont Songe' 
+    },
+    { 
+      id: 'item5', 
+      to: language === 'en' ? '/' : '/en', 
+      label: language === 'en' ? 'Mon site existe aussi en français' : 'Mon site existe aussi en anglais' 
+    },
   ]
   return (
     <div className="checklist">
@@ -146,8 +178,9 @@ function Layout({ children }) {
 }
 
 function SongSelect() {
+  const language = useLanguage()
   const options = [
-    { value: '', label: 'chansons' },
+    { value: '', label: language === 'en' ? 'songs' : 'chansons' },
     { value: `${base}audio/song1.wav`, label: 'Stray' },
     { value: `${base}audio/song2.wav`, label: 'deep Forest' },
   ]
@@ -169,19 +202,23 @@ function Home() { return (<Layout><Checklist /><SongSelect /></Layout>) }
 function Page1() {
   const { data } = useSheetData('page1_je_mappelle_aurore')
   const first = Array.isArray(data) && data.length > 0 ? data[0] : null
+  const language = useLanguage()
   
   // Only render if we have data
   if (!first) {
     return (
       <Layout>
+        <div className="content-box page1">
+          <h1>Chargement...</h1>
+        </div>
         <Checklist />
         <SongSelect />
       </Layout>
     )
   }
   
-  const title = first.title
-  const subtitle = first.content
+  const title = language === 'en' ? (first.title_eng || first.title) : first.title
+  const subtitle = language === 'en' ? (first.content_eng || first.content) : first.content
   const imageUrl = first.image_url ? processImageUrl(first.image_url) : null
   const formTitle = first.form_title
   const formDescription = first.form_description
@@ -210,17 +247,17 @@ function Page1() {
         {formDescription && <p>{formDescription}</p>}
 
         <form id="contactForm" onSubmit={onSubmit}>
-          <label htmlFor="name">Votre nom :</label><br />
+          <label htmlFor="name">{language === 'en' ? 'Your name:' : 'Votre nom :'}</label><br />
           <input type="text" id="name" name="name" required /><br /><br />
 
-          <label htmlFor="email">Votre email :</label><br />
+          <label htmlFor="email">{language === 'en' ? 'Your email:' : 'Votre email :'}</label><br />
           <input type="email" id="email" name="email" required /><br /><br />
 
-          <label htmlFor="message">Votre message:</label><br />
+          <label htmlFor="message">{language === 'en' ? 'Your message:' : 'Votre message:'}</label><br />
           <textarea id="message" name="message" rows={5} required />
           <br /><br />
 
-          <button type="submit">Envoyer</button>
+          <button type="submit">{language === 'en' ? 'Send' : 'Envoyer'}</button>
         </form>
       </div>
 
@@ -236,9 +273,10 @@ function Page1() {
 function Page2() { 
   const { data } = useSheetData('page2_topographie_etrange')
   const first = Array.isArray(data) && data.length > 0 ? data[0] : null
+  const language = useLanguage()
   
-  const title = 'Topographie de l\'étrange'
-  const subtitle = 'Du sacré dans le profane, de la beauté dans la décrépitude'
+  const title = language === 'en' ? 'Topography of the Strange' : 'Topographie de l\'étrange'
+  const subtitle = language === 'en' ? 'The sacred in the profane, beauty amid decay' : 'Du sacré dans le profane, de la beauté dans la décrépitude'
   
   // Get all images from the sheet for the floating gallery (do NOT skip first row; headers are already stripped by the API)
   console.log('Raw data from Google Sheets:', data)
@@ -255,7 +293,7 @@ function Page2() {
     
     const item = {
       src: processedUrl,
-      caption: row.caption || '',
+      caption: language === 'en' ? (row.caption_eng || row.caption) : row.caption,
       size: row.size || 'normal'
     }
     
@@ -302,6 +340,7 @@ function Page2() {
 function Page3() {
   const { data } = useSheetData('page3_reliques_reve')
   const row = Array.isArray(data) && data.length > 0 ? data[0] : null
+  const language = useLanguage()
   
   // Only render if we have data
   if (!row) {
@@ -313,8 +352,8 @@ function Page3() {
     )
   }
   
-  const title = row.title
-  const typewriterText = row.content
+  const title = language === 'en' ? (row.title_eng || row.title) : row.title
+  const typewriterText = language === 'en' ? (row.content_eng || row.content) : row.content
   const imageUrl = row.image_url ? processImageUrl(row.image_url) : null
   
   return (
@@ -354,6 +393,7 @@ function Page3() {
 function Page4() {
   const { data } = useSheetData('page4_memoires_mont_songe')
   const rows = Array.isArray(data) ? data : []
+  const language = useLanguage()
   
   // Only render if we have data
   if (!rows || rows.length === 0) {
@@ -367,13 +407,15 @@ function Page4() {
   
   const typedIntro = rows.find((r) => String(r.text_type).toLowerCase() === 'introductory_quote')
   const typedMain = rows.find((r) => String(r.text_type).toLowerCase() === 'main_content')
-  const introContent = typedIntro?.content
-  const mainContent = typedMain?.content
+  const introContent = language === 'en' ? (typedIntro?.content_eng || typedIntro?.content) : typedIntro?.content
+  const mainContent = language === 'en' ? (typedMain?.content_eng || typedMain?.content) : typedMain?.content
+  
+  const pageTitle = language === 'en' ? 'Memories of Mount Songe' : 'Mémoires du Mont Songe'
   
   return (
     <Layout>
       <div className="content-box page4">
-        <h1>Mémoires du Mont Songe</h1>
+        <h1>{pageTitle}</h1>
         {introContent && (
           <blockquote>
             <p>
@@ -411,6 +453,13 @@ export default function App() {
         <Route path="/page2" element={<Page2 />} />
         <Route path="/page3" element={<Page3 />} />
         <Route path="/page4" element={<Page4 />} />
+        
+        {/* English routes */}
+        <Route path="/en" element={<Home />} />
+        <Route path="/en/page1" element={<Page1 />} />
+        <Route path="/en/page2" element={<Page2 />} />
+        <Route path="/en/page3" element={<Page3 />} />
+        <Route path="/en/page4" element={<Page4 />} />
       </Routes>
     </LayoutShell>
   )
