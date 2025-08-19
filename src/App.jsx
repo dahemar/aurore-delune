@@ -118,7 +118,7 @@ function Checklist() {
     { 
       id: 'item5', 
       to: language === 'en' ? '/' : '/en', 
-      label: language === 'en' ? 'Mon site existe aussi en français' : 'Mon site existe aussi en anglais' 
+      label: language === 'en' ? 'Mon site existe aussi en français' : 'My site also exists in English' 
     },
   ]
   return (
@@ -208,9 +208,6 @@ function Page1() {
   if (!first) {
     return (
       <Layout>
-        <div className="content-box page1">
-          <h1>Chargement...</h1>
-        </div>
         <Checklist />
         <SongSelect />
       </Layout>
@@ -274,6 +271,7 @@ function Page2() {
   const { data } = useSheetData('page2_topographie_etrange')
   const first = Array.isArray(data) && data.length > 0 ? data[0] : null
   const language = useLanguage()
+  const [lightboxState, setLightboxState] = useState({ isOpen: false, imageSrc: '', imageCaption: '', imageDescription: '' })
   
   const title = language === 'en' ? 'Topography of the Strange' : 'Topographie de l\'étrange'
   const subtitle = language === 'en' ? 'The sacred in the profane, beauty amid decay' : 'Du sacré dans le profane, de la beauté dans la décrépitude'
@@ -294,7 +292,8 @@ function Page2() {
     const item = {
       src: processedUrl,
       caption: language === 'en' ? (row.caption_eng || row.caption) : row.caption,
-      size: row.size || 'normal'
+      size: row.size || 'normal',
+      description: language === 'en' ? (row.description_eng || row.description) : row.description
     }
     
     console.log('Created item:', item)
@@ -321,6 +320,19 @@ function Page2() {
   console.log('Final filtered items:', galleryItems.length)
   console.log('Final galleryItems:', galleryItems)
   
+  const handleImageClick = (item) => {
+    setLightboxState({
+      isOpen: true,
+      imageSrc: item.src,
+      imageCaption: item.caption,
+      imageDescription: item.description
+    })
+  }
+  
+  const closeLightbox = () => {
+    setLightboxState({ isOpen: false, imageSrc: '', imageCaption: '', imageDescription: '' })
+  }
+  
   return (
     <Layout>
       <div className="content-box page2">
@@ -331,9 +343,16 @@ function Page2() {
           </div>
         )}
       </div>
-      {galleryItems.length > 0 && <FloatingGallery items={galleryItems} />}
+      {galleryItems.length > 0 && <FloatingGallery items={galleryItems} onImageClick={handleImageClick} />}
       <Checklist />
       <SongSelect />
+      <Lightbox 
+        isOpen={lightboxState.isOpen}
+        imageSrc={lightboxState.imageSrc}
+        imageCaption={lightboxState.imageCaption}
+        imageDescription={lightboxState.imageDescription}
+        onClose={closeLightbox}
+      />
     </Layout>
   ) 
 }
@@ -341,6 +360,7 @@ function Page3() {
   const { data } = useSheetData('page3_reliques_reve')
   const row = Array.isArray(data) && data.length > 0 ? data[0] : null
   const language = useLanguage()
+  const [lightboxState, setLightboxState] = useState({ isOpen: false, imageSrc: '', imageCaption: '', imageDescription: '' })
   
   // Only render if we have data
   if (!row) {
@@ -355,6 +375,20 @@ function Page3() {
   const title = language === 'en' ? (row.title_eng || row.title) : row.title
   const typewriterText = language === 'en' ? (row.content_eng || row.content) : row.content
   const imageUrl = row.image_url ? processImageUrl(row.image_url) : null
+  const imageDescription = language === 'en' ? (row.description_eng || row.description) : row.description
+  
+  const handleImageClick = () => {
+    setLightboxState({
+      isOpen: true,
+      imageSrc: imageUrl,
+      imageCaption: title,
+      imageDescription: imageDescription
+    })
+  }
+  
+  const closeLightbox = () => {
+    setLightboxState({ isOpen: false, imageSrc: '', imageCaption: '', imageDescription: '' })
+  }
   
   return (
     <Layout>
@@ -375,8 +409,11 @@ function Page3() {
                 display: 'block',
                 margin: '20px auto',
                 maxHeight: '400px',
-                objectFit: 'contain'
+                objectFit: 'contain',
+                cursor: 'pointer'
               }}
+              onClick={handleImageClick}
+              className="clickable-image"
             />
           )}
         </div>
@@ -387,6 +424,13 @@ function Page3() {
           <SongSelect />
         </div>
       </div>
+      <Lightbox 
+        isOpen={lightboxState.isOpen}
+        imageSrc={lightboxState.imageSrc}
+        imageCaption={lightboxState.imageCaption}
+        imageDescription={lightboxState.imageDescription}
+        onClose={closeLightbox}
+      />
     </Layout>
   )
 }

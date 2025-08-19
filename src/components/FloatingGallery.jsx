@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 const base = import.meta.env.BASE_URL
 
-export default function FloatingGallery({ items }) {
+export default function FloatingGallery({ items, onImageClick }) {
   const galleryRef = useRef(null)
   const animRef = useRef({ draggingFigure: null, offsetX: 0, offsetY: 0, currentX: 0, currentY: 0, targetX: 0, targetY: 0, frame: 0, zTop: 10 })
 
@@ -159,6 +159,12 @@ export default function FloatingGallery({ items }) {
   // altura del contenedor: más alta en móvil
   const isMobileRender = typeof window !== 'undefined' && window.innerWidth <= 768
 
+  const handleImageClick = (item) => {
+    if (onImageClick) {
+      onImageClick(item)
+    }
+  }
+
   return (
     <div
       className="floating-gallery"
@@ -199,7 +205,12 @@ export default function FloatingGallery({ items }) {
         }
         
         return (
-          <figure key={idx} style={figureStyle}>
+          <figure 
+            key={idx} 
+            style={figureStyle}
+            onClick={() => handleImageClick(item)}
+            className="clickable-image"
+          >
             <img src={item.src} alt="" draggable={false} style={imgStyle} />
             <figcaption style={captionStyle}>{item.caption}</figcaption>
           </figure>
