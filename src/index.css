@@ -374,10 +374,10 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center;
   }
   
-  /* Simple dropdown - Position lower on mobile */
+  /* Simple dropdown - Position near bottom of page on mobile */
   .simple-dropdown { 
     text-align: center; 
-    margin: 80px auto 0 auto; 
+    margin: 200px auto 0 auto; 
     text-align: center;
   }
   
