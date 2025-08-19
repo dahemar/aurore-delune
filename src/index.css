@@ -632,6 +632,17 @@ img { opacity: 1 !important; }
   filter: brightness(1.1);
 }
 
+/* Page3 main image - separate from floating gallery */
+.page3-main-image {
+  transition: transform 0.2s ease, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.page3-main-image:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
 /* Enhanced lightbox styles */
 #overlay {
   position: fixed;

@@ -413,7 +413,7 @@ function Page3() {
                 cursor: 'pointer'
               }}
               onClick={handleImageClick}
-              className="clickable-image"
+              className="page3-main-image"
             />
           )}
         </div>
