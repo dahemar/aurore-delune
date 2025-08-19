@@ -374,19 +374,11 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     text-align: center;
   }
   
-  /* Simple dropdown - Position at bottom on mobile */
+  /* Simple dropdown - Position lower on mobile */
   .simple-dropdown { 
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
     text-align: center; 
-    margin: 0;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px 15px;
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
+    margin: 80px auto 0 auto; 
+    text-align: center;
   }
   
   .simple-dropdown select {
