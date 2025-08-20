@@ -18,7 +18,7 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url("/aurore-delune/images/background.jpg");
+  background-image: url("/images/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -60,7 +60,7 @@ div {
 
 @font-face {
   font-family: "FairyDustB";
-  src: url("/aurore-delune/fonts/FairydustB.woff") format("woff");
+  src: url("/fonts/FairydustB.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
