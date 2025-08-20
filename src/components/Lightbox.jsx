@@ -44,44 +44,28 @@ export default function Lightbox({ isOpen, imageSrc, imageCaption, imageDescript
         >
           ×
         </button>
-        
-        <img 
-          id="lightbox-image" 
-          src={imageSrc} 
-          alt="" 
-          style={{
-            maxWidth: '90%',
-            maxHeight: '70vh',
-            border: 'none',
-            borderRadius: '0px',
-            boxShadow: 'none'
-          }}
-        />
-        
-        {imageCaption && (
-          <h3 id="lightbox-caption" style={{
-            fontSize: '1.5rem',
-            color: 'white',
-            margin: '20px 0 10px 0',
-            textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-          }}>
-            {imageCaption}
-          </h3>
-        )}
-        
-        {imageDescription && (
-          <p id="lightbox-description" style={{
-            fontSize: '1.1rem',
-            color: 'white',
-            margin: '0 0 20px 0',
-            maxWidth: '600px',
-            lineHeight: '1.6',
-            textAlign: 'center',
-            textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-          }}>
-            {imageDescription}
-          </p>
-        )}
+
+        <div className="lightbox-content">
+          <div className="lightbox-image-container">
+            <img 
+              id="lightbox-image" 
+              src={imageSrc} 
+              alt="" 
+            />
+          </div>
+          <div className="lightbox-text">
+            {imageCaption && (
+              <h3 id="lightbox-caption">
+                {imageCaption}
+              </h3>
+            )}
+            {imageDescription && (
+              <p id="lightbox-description">
+                {imageDescription}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

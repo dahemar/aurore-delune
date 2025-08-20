@@ -707,6 +707,69 @@ img { opacity: 1 !important; }
   white-space: pre-line; /* preserve line breaks from Google Sheets */
 }
 
+/* Lightbox two-column layout */
+.lightbox-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  max-width: 90vw;
+}
+
+.lightbox-image-container {
+  flex: 0 0 auto;
+}
+
+/* Ensure image scales but stays within viewport */
+#lightbox-image {
+  max-width: 58vw;
+  max-height: 70vh;
+  border: none;
+  border-radius: 0px;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+
+.lightbox-text {
+  flex: 1 1 32vw;
+  max-width: 32vw;
+  text-align: left;
+}
+
+#lightbox-caption {
+  font-size: 1.5rem;
+  color: white;
+  margin: 0 0 10px 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+#lightbox-description {
+  font-size: 1.1rem;
+  color: white;
+  margin: 0;
+  max-width: 32vw;
+  line-height: 1.6;
+  text-align: left;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  white-space: pre-line;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 768px) {
+  .lightbox-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  #lightbox-image {
+    max-width: 90vw;
+    max-height: 50vh;
+  }
+  .lightbox-text, #lightbox-description {
+    max-width: 90vw;
+    text-align: center;
+  }
+}
+
 /* Desktop styles - reduce checklist margin */
 @media (min-width: 769px) {
   .checklist ul {
