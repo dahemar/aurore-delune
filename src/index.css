@@ -691,9 +691,9 @@ img { opacity: 1 !important; }
 
 #lightbox-caption {
   font-size: 1.5rem;
-  color: white;
+  color: #ffeaea;
   margin: 20px 0 10px 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
 }
 
 #lightbox-description {
@@ -737,9 +737,9 @@ img { opacity: 1 !important; }
 
 #lightbox-caption {
   font-size: 1.5rem;
-  color: white;
+  color: #ffeaea;
   margin: 0 0 10px 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
 }
 
 #lightbox-description {
