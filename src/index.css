@@ -803,7 +803,7 @@ img { opacity: 1 !important; }
 
 /* In stacked layout, slightly reduce image height to make room for full caption */
 .lightbox-content.force-stack #lightbox-image {
-  max-height: 70vh !important;
+  max-height: 75vh !important;
 }
 
 .lightbox-image-container {
