@@ -151,7 +151,23 @@ export function processImageUrl(url) {
   }
   
   // Original logic for direct URLs
-  if (/^https?:\/\//i.test(trimmed) || /^data:/i.test(trimmed)) return trimmed
+  if (/^https?:\/\//i.test(trimmed) || /^data:/i.test(trimmed)) {
+    try {
+      const u = new URL(trimmed)
+      const hostname = u.hostname.toLowerCase()
+      // Normalize Imgur URLs: remove size suffix (s, m, l, h) before extension to get original
+      if (hostname.endsWith('imgur.com')) {
+        // Handle i.imgur.com direct image links
+        if (hostname.startsWith('i.')) {
+          u.pathname = u.pathname.replace(/([^/.]+)[smlh]?(\.(?:jpg|jpeg|png|gif|webp))$/i, '$1$2')
+          return u.toString()
+        }
+        // Handle gallery/page links like imgur.com/abc123 → try i.imgur.com/abc123.jpg (unknown ext)
+        // We cannot reliably infer extension; prefer leaving as-is to avoid 404s
+      }
+    } catch {}
+    return trimmed
+  }
   const base = import.meta.env.BASE_URL || '/'
   return `${base}${trimmed.replace(/^\/+/, '')}`
 }

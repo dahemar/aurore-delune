@@ -1,10 +1,11 @@
 import React from 'react'
-import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import Flies from './components/Flies'
 import Typewriter from './components/Typewriter'
 import FloatingGallery from './components/FloatingGallery'
+import StackedGallery from './components/StackedGallery'
 import Lightbox from './components/Lightbox'
 import HoverTrail from './components/HoverTrail'
 import { useSheetData } from './hooks/useSheetData'
@@ -357,13 +358,19 @@ function Page2() {
   ) 
 }
 function Page3() {
-  const { data } = useSheetData('page3_reliques_reve')
-  const row = Array.isArray(data) && data.length > 0 ? data[0] : null
+  // Fetch header (row 1 headers + row 2 data)
+  const { data: headerData } = useSheetData('page3_reliques_reve!A1:D2')
+  // Fetch images table (row 4 headers + rows 5+ data)
+  const { data: imagesData } = useSheetData('page3_reliques_reve!A4:E')
+
+  console.log('Page3 - HeaderData:', headerData)
+  console.log('Page3 - ImagesData:', imagesData)
+
+  const headerRow = Array.isArray(headerData) && headerData.length > 0 ? headerData[0] : null
   const language = useLanguage()
   const [lightboxState, setLightboxState] = useState({ isOpen: false, imageSrc: '', imageCaption: '', imageDescription: '' })
-  
-  // Only render if we have data
-  if (!row) {
+
+  if (!headerRow) {
     return (
       <Layout>
         <Checklist />
@@ -371,25 +378,36 @@ function Page3() {
       </Layout>
     )
   }
-  
-  const title = language === 'en' ? (row.title_eng || row.title) : row.title
-  const typewriterText = language === 'en' ? (row.content_eng || row.content) : row.content
-  const imageUrl = row.image_url ? processImageUrl(row.image_url) : null
-  const imageDescription = language === 'en' ? (row.description_eng || row.description) : row.description
-  
-  const handleImageClick = () => {
+
+  const title = language === 'en' ? (headerRow.title_eng || headerRow.title) : headerRow.title
+  const typewriterText = language === 'en' ? (headerRow.content_eng || headerRow.content) : headerRow.content
+
+  // Build gallery items from imagesData
+  const galleryItems = Array.isArray(imagesData) ? imagesData.filter(row => {
+    const hasImage = row.image_url && String(row.image_url).trim() !== ''
+    return hasImage
+  }).map(row => {
+    const processedUrl = processImageUrl(row.image_url)
+    return {
+      src: processedUrl,
+      caption: language === 'en' ? (row.caption_eng || row.caption) : row.caption,
+      description: language === 'en' ? (row.description_eng || row.description) : row.description
+    }
+  }).filter(item => item.src) : []
+
+  const handleImageClick = (item) => {
     setLightboxState({
       isOpen: true,
-      imageSrc: imageUrl,
-      imageCaption: title,
-      imageDescription: imageDescription
+      imageSrc: item.src,
+      imageCaption: item.caption,
+      imageDescription: item.description
     })
   }
-  
+
   const closeLightbox = () => {
     setLightboxState({ isOpen: false, imageSrc: '', imageCaption: '', imageDescription: '' })
   }
-  
+
   return (
     <Layout>
       <div className="content-box page3">
@@ -398,25 +416,10 @@ function Page3() {
           <div className="type-container">
             <Typewriter text={typewriterText} />
           </div>
-
-          {imageUrl && (
-            <img 
-              src={imageUrl} 
-              alt="" 
-              style={{
-                maxWidth: '100%',
-                height: 'auto',
-                display: 'block',
-                margin: '20px auto',
-                maxHeight: '400px',
-                objectFit: 'contain',
-                cursor: 'pointer'
-              }}
-              onClick={handleImageClick}
-              className="page3-main-image"
-            />
-          )}
         </div>
+        {galleryItems.length > 0 && (
+          <StackedGallery items={galleryItems} onImageClick={handleImageClick} />
+        )}
         <div className="checklist">
           <Checklist />
         </div>
@@ -497,6 +500,8 @@ export default function App() {
         <Route path="/page2" element={<Page2 />} />
         <Route path="/page3" element={<Page3 />} />
         <Route path="/page4" element={<Page4 />} />
+        {/* Local dev: redirect legacy GH Pages base to root */}
+        <Route path="/aurore/*" element={<Navigate to="/" replace />} />
         
         {/* English routes */}
         <Route path="/en" element={<Home />} />

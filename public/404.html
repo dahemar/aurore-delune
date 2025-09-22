@@ -5,7 +5,8 @@
     <title>Not Found</title>
     <script type="text/javascript">
       // SPA for GitHub Pages (rafgraph)
-      var pathSegmentsToKeep = 1; // keep "/aurore"
+      // keep 0 path segments when hosted at domain root
+      var pathSegmentsToKeep = 0;
       var l = window.location;
       l.replace(
         l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +

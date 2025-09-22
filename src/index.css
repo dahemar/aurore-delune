@@ -221,6 +221,64 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
 .floating-gallery figure { margin: 0; }
 .floating-gallery img { display: block; width: 100%; height: auto; pointer-events: none; }
 
+/* Stacked Gallery for Page 3 */
+.stacked-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 40px 0;
+  align-items: center;
+}
+
+.stacked-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+}
+
+.stacked-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+  border-radius: 0; /* Changed from 8px to 0 for square borders */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.2s ease; /* Added filter transition */
+}
+
+.stacked-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  filter: brightness(1.1); /* Added same hover effect as page2 */
+}
+
+.stacked-caption {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #ffeaea; /* Keep the color but remove the glow */
+  max-width: 80%;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stacked-gallery {
+    gap: 20px;
+    margin: 30px 0;
+  }
+  
+  .stacked-image {
+    max-height: 350px;
+  }
+  
+  .stacked-caption {
+    font-size: 1rem;
+    margin-top: 12px;
+  }
+}
+
 /* ===== MOBILE STYLES - SIMPLIFIED AND CONSOLIDATED ===== */
 @media (max-width: 768px) {
   /* Base mobile reset */
@@ -456,6 +514,9 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
     right: 10px; 
     bottom: 10px; 
   }
+
+/* Hide audio player when lightbox is open */
+body.lightbox-open #audio-player { display: none !important; }
   
   /* Lightbox */
   #lightbox-image { 
@@ -681,38 +742,68 @@ img { opacity: 1 !important; }
 }
 
 #lightbox-image {
-  max-width: 90%;
-  max-height: 70vh;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
   border: none;
   border-radius: 0px;
   box-shadow: none;
   margin-bottom: 20px;
+  /* Override global image effects to ensure full-quality display */
+  filter: none !important;
+  image-rendering: auto !important;
+  opacity: 1 !important;
 }
 
 #lightbox-caption {
   font-size: 1.5rem;
-  color: #ffeaea;
+  color: #ffffff !important; /* Changed to pure white to force update */
   margin: 20px 0 10px 0;
-  text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
+  text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
 }
 
 #lightbox-description {
   font-size: 1.1rem;
-  color: #ffeaea;
+  color: #ffffff !important; /* Changed to pure white to force update */
   margin: 0 0 20px 0;
   max-width: 600px;
   line-height: 1.6;
   text-align: center;
-  text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
+  text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
   white-space: pre-line; /* preserve line breaks from Google Sheets */
 }
 
 /* Lightbox two-column layout */
 .lightbox-content {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr; /* default single column */
   gap: 24px;
-  align-items: flex-start;
+  align-items: start;
   max-width: 90vw;
+}
+
+.lightbox-content.has-text {
+  grid-template-columns: 1fr minmax(260px, 32vw);
+}
+
+/* Force stacked layout when JS determines it (e.g., ultra-wide images) */
+.lightbox-content.force-stack {
+  grid-template-columns: 1fr;
+}
+.lightbox-content.force-stack .lightbox-text,
+.lightbox-content.force-stack #lightbox-description {
+  max-width: 90vw;
+  text-align: center;
+}
+.lightbox-content.force-stack .lightbox-text {
+  max-height: 35vh; /* cap caption height to keep image visible */
+  overflow: auto;
+}
+
+/* In stacked layout, slightly reduce image height to make room for full caption */
+.lightbox-content.force-stack #lightbox-image {
+  max-height: 70vh !important;
 }
 
 .lightbox-image-container {
@@ -721,12 +812,17 @@ img { opacity: 1 !important; }
 
 /* Ensure image scales but stays within viewport */
 #lightbox-image {
-  max-width: 58vw;
-  max-height: 70vh;
+  max-width: 100%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
   border: none;
   border-radius: 0px;
   box-shadow: none;
   margin-bottom: 0;
+  filter: none !important;
+  image-rendering: auto !important;
+  opacity: 1 !important;
 }
 
 .lightbox-text {
@@ -737,19 +833,19 @@ img { opacity: 1 !important; }
 
 #lightbox-caption {
   font-size: 1.5rem;
-  color: #ffeaea;
+  color: #ffffff !important; /* Changed to pure white to force update */
   margin: 0 0 10px 0;
-  text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
+  text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
 }
 
 #lightbox-description {
   font-size: 1.1rem;
-  color: #ffeaea;
+  color: #ffffff !important; /* Changed to pure white to force update */
   margin: 0;
   max-width: 32vw;
   line-height: 1.6;
   text-align: left;
-  text-shadow: 0 0 2px #000, 0 0 6px #8f3dff, 0 0 12px #c26bff, 0 0 18px #eebfff;
+  text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
   white-space: pre-line;
 }
 
@@ -761,14 +857,21 @@ img { opacity: 1 !important; }
     gap: 12px;
   }
   #lightbox-image {
-    max-width: 90vw;
-    max-height: 50vh;
+    max-width: 96vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    filter: none !important;
+    image-rendering: auto !important;
+    opacity: 1 !important;
   }
   .lightbox-text, #lightbox-description {
     max-width: 90vw;
     text-align: center;
   }
 }
+
+/* Desktop: grid handles reserved text column automatically */
 
 /* Desktop styles - reduce checklist margin */
 @media (min-width: 769px) {
