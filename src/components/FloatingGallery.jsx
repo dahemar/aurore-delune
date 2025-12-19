@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const base = import.meta.env.BASE_URL
 
@@ -179,7 +179,7 @@ export default function FloatingGallery({ items, onImageClick }) {
   const extraLargeStyle = { ...figStyle, width: 'clamp(220px, 48vw, 550px)' }
   
   const imgStyle = { width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }
-  const capStyle = { color: '#fff', textShadow: '0 1px 2px #000', padding: '4px 6px', borderRadius: 4, fontSize: '1.1rem' }
+  const capStyle = { color: '#fff', textShadow: '0 1px 2px #000', padding: '4px 6px', borderRadius: 4, fontSize: '1.1rem', fontFamily: '"FairyDustB", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }
   const capStyleBig = { ...capStyle, fontSize: '1.3rem', fontWeight: 'bold' }
   const capStyleLarge = { ...capStyle, fontSize: '1.5rem', fontWeight: 'bold' }
   const capStyleExtraLarge = { ...capStyle, fontSize: '1.7rem', fontWeight: 'bold' }
@@ -243,7 +243,16 @@ export default function FloatingGallery({ items, onImageClick }) {
             className="clickable-image"
           >
             <img src={item.src} alt="" draggable={false} style={imgStyle} />
-            <figcaption style={captionStyle}>{item.caption}</figcaption>
+            <figcaption style={captionStyle}>
+              {String(item.caption || '').split("'").map((part, i, arr) => 
+                i < arr.length - 1 ? (
+                  <React.Fragment key={i}>
+                    {part}
+                    <span style={{ fontFamily: 'system-ui, -apple-system, sans-serif', display: 'inline' }}>'</span>
+                  </React.Fragment>
+                ) : part
+              )}
+            </figcaption>
           </figure>
         )
       })}

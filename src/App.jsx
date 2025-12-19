@@ -9,7 +9,7 @@ import StackedGallery from './components/StackedGallery'
 import Lightbox from './components/Lightbox'
 import HoverTrail from './components/HoverTrail'
 import { useSheetData } from './hooks/useSheetData'
-import { processImageUrl, preloadSheetData } from './utils/sheetsApi'
+import { processImageUrl, preloadSheetData, normalizeText } from './utils/sheetsApi'
 
 const base = import.meta.env.BASE_URL
 
@@ -215,11 +215,12 @@ function Page1() {
     )
   }
   
-  const title = language === 'en' ? (first.title_eng || first.title) : first.title
-  const subtitle = language === 'en' ? (first.content_eng || first.content) : first.content
+  const title = normalizeText(language === 'en' ? (first.title_eng || first.title) : first.title)
+  const subtitle = normalizeText(language === 'en' ? (first.content_eng || first.content) : first.content)
   const imageUrl = first.image_url ? processImageUrl(first.image_url) : null
-  const formTitle = first.form_title
-  const formDescription = first.form_description
+  const formTitle = normalizeText(first.form_title)
+  const formDescription = normalizeText(first.form_description)
+  const bio = normalizeText(language === 'en' ? (first.bio_eng || first.bio) : first.bio)
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -257,6 +258,12 @@ function Page1() {
 
           <button type="submit">{language === 'en' ? 'Send' : 'Envoyer'}</button>
         </form>
+
+        {bio && (
+          <p style={{ maxWidth: 600, margin: '24px auto 0 auto', whiteSpace: 'pre-line' }}>
+            {bio}
+          </p>
+        )}
       </div>
 
       {imageUrl && (
@@ -290,11 +297,19 @@ function Page2() {
     const processedUrl = row.image_url ? processImageUrl(row.image_url) : ''
     console.log('Processed URL:', processedUrl)
     
+    const rawCaption = language === 'en' ? (row.caption_eng || row.caption) : row.caption
+    const rawDescription = language === 'en' ? (row.description_eng || row.description) : row.description
+    const normalizedCaption = normalizeText(rawCaption)
+    const normalizedDescription = normalizeText(rawDescription)
+    
+    console.log('Row caption raw:', rawCaption, 'charCodes:', rawCaption ? Array.from(rawCaption).map(c => c.charCodeAt(0)) : [])
+    console.log('Row caption normalized:', normalizedCaption, 'charCodes:', normalizedCaption ? Array.from(normalizedCaption).map(c => c.charCodeAt(0)) : [])
+    
     const item = {
       src: processedUrl,
-      caption: language === 'en' ? (row.caption_eng || row.caption) : row.caption,
+      caption: normalizedCaption,
       size: row.size || 'normal',
-      description: language === 'en' ? (row.description_eng || row.description) : row.description
+      description: normalizedDescription
     }
     
     console.log('Created item:', item)
@@ -379,8 +394,8 @@ function Page3() {
     )
   }
 
-  const title = language === 'en' ? (headerRow.title_eng || headerRow.title) : headerRow.title
-  const typewriterText = language === 'en' ? (headerRow.content_eng || headerRow.content) : headerRow.content
+  const title = normalizeText(language === 'en' ? (headerRow.title_eng || headerRow.title) : headerRow.title)
+  const typewriterText = normalizeText(language === 'en' ? (headerRow.content_eng || headerRow.content) : headerRow.content)
 
   // Build gallery items from imagesData
   const galleryItems = Array.isArray(imagesData) ? imagesData.filter(row => {
@@ -390,8 +405,8 @@ function Page3() {
     const processedUrl = processImageUrl(row.image_url)
     return {
       src: processedUrl,
-      caption: language === 'en' ? (row.caption_eng || row.caption) : row.caption,
-      description: language === 'en' ? (row.description_eng || row.description) : row.description
+      caption: normalizeText(language === 'en' ? (row.caption_eng || row.caption) : row.caption),
+      description: normalizeText(language === 'en' ? (row.description_eng || row.description) : row.description)
     }
   }).filter(item => item.src) : []
 

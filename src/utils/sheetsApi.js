@@ -21,7 +21,9 @@ function getCacheKey(sheetName) {
 }
 
 export function setCachedSheetData(sheetName, data) {
-  const payload = { ts: Date.now(), data }
+  // Normalize data before caching to ensure apostrophes are fixed
+  const normalizedData = normalizeDataRecursive(data)
+  const payload = { ts: Date.now(), data: normalizedData }
   try {
     // Caché en memoria para acceso instantáneo
     memoryCache.set(sheetName, payload)
@@ -33,12 +35,27 @@ export function setCachedSheetData(sheetName, data) {
   }
 }
 
+// Normalize all text values in a data object/array recursively
+function normalizeDataRecursive(data) {
+  if (Array.isArray(data)) {
+    return data.map(item => normalizeDataRecursive(item))
+  } else if (data && typeof data === 'object') {
+    const normalized = {}
+    for (const [key, value] of Object.entries(data)) {
+      normalized[key] = typeof value === 'string' ? normalizeText(value) : normalizeDataRecursive(value)
+    }
+    return normalized
+  }
+  return typeof data === 'string' ? normalizeText(data) : data
+}
+
 export function getCachedSheetData(sheetName) {
   try {
     // Primero intentar caché en memoria (más rápido)
     const memoryData = memoryCache.get(sheetName)
     if (memoryData && Date.now() - memoryData.ts <= CACHE_TTL_MS) {
-      return memoryData.data
+      // Normalize data from cache to ensure apostrophes are fixed
+      return normalizeDataRecursive(memoryData.data)
     }
     
     // Si no hay caché en memoria, intentar localStorage
@@ -49,9 +66,13 @@ export function getCachedSheetData(sheetName) {
     if (!parsed?.ts || !parsed?.data) return null
     if (Date.now() - parsed.ts > CACHE_TTL_MS) return null
     
-    // Restaurar en caché de memoria
-    memoryCache.set(sheetName, parsed)
-    return parsed.data
+    // Normalize data from localStorage cache
+    const normalizedData = normalizeDataRecursive(parsed.data)
+    
+    // Restaurar en caché de memoria con datos normalizados
+    const normalizedCache = { ...parsed, data: normalizedData }
+    memoryCache.set(sheetName, normalizedCache)
+    return normalizedData
   } catch (e) {
     console.warn('[sheetsApi] Cache read failed:', e)
     return null
@@ -117,7 +138,9 @@ export async function fetchSheetData(sheetName) {
     const objects = rows.map((row) => {
       const obj = {}
       headers.forEach((h, idx) => {
-        obj[String(h).trim()] = row[idx] ?? ''
+        const value = row[idx] ?? ''
+        // Normalize text values to fix curly quotes/apostrophes
+        obj[String(h).trim()] = typeof value === 'string' ? normalizeText(value) : value
       })
       return obj
     })
@@ -131,6 +154,17 @@ export async function fetchSheetData(sheetName) {
     }
     return []
   }
+}
+
+// Normalize text from Google Sheets: convert curly quotes/apostrophes to straight ones
+export function normalizeText(text) {
+  if (!text) return text
+  return String(text)
+    // Convert curly apostrophes to straight apostrophe
+    .replace(/['']/g, "'")
+    // Convert curly quotes to straight quotes (optional, but helpful)
+    .replace(/[""]/g, '"')
+    .replace(/[""]/g, '"')
 }
 
 export function processImageUrl(url) {

@@ -1,4 +1,21 @@
-import { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
+
+// Render text ensuring apostrophes use a system font that includes the glyph
+function renderWithApostrophes(text) {
+  return String(text || '').split(/(['’‘])/g).map((part, i) => {
+    if (part === "'" || part === '’' || part === '‘') {
+      return (
+        <span
+          key={i}
+          style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', display: 'inline' }}
+        >
+          '
+        </span>
+      )
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>
+  })
+}
 
 function getFilenameCaption(src) {
   try {
@@ -174,12 +191,12 @@ export default function Lightbox({ isOpen, imageSrc, imageCaption, imageDescript
           <div className="lightbox-text" ref={textRef}>
             {((imageCaption && String(imageCaption).trim()) || getFilenameCaption(imageSrc)) && (
               <h3 id="lightbox-caption">
-                {(imageCaption && String(imageCaption).trim()) || getFilenameCaption(imageSrc)}
+                {renderWithApostrophes((imageCaption && String(imageCaption).trim()) || getFilenameCaption(imageSrc))}
               </h3>
             )}
             {(imageDescription && String(imageDescription).trim()) && (
               <p id="lightbox-description">
-                {imageDescription}
+                {renderWithApostrophes(imageDescription)}
               </p>
             )}
           </div>

@@ -220,6 +220,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
 /* Floating gallery tweaks */
 .floating-gallery figure { margin: 0; }
 .floating-gallery img { display: block; width: 100%; height: auto; pointer-events: none; }
+.floating-gallery figcaption { font-family: "FairyDustB", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important; }
 
 /* Stacked Gallery for Page 3 */
 .stacked-gallery {
@@ -260,6 +261,7 @@ body, #root, .container, .main-content, .content-box, .poem, blockquote, .floati
   color: #ffeaea; /* Keep the color but remove the glow */
   max-width: 80%;
   line-height: 1.4;
+  font-family: "FairyDustB", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Responsive adjustments */
@@ -761,6 +763,7 @@ img { opacity: 1 !important; }
   color: #ffffff !important; /* Changed to pure white to force update */
   margin: 20px 0 10px 0;
   text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
+  font-family: "FairyDustB", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 #lightbox-description {
@@ -772,6 +775,7 @@ img { opacity: 1 !important; }
   text-align: center;
   text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
   white-space: pre-line; /* preserve line breaks from Google Sheets */
+  font-family: "FairyDustB", "FairyDustBFallback", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Lightbox two-column layout */
@@ -836,6 +840,7 @@ img { opacity: 1 !important; }
   color: #ffffff !important; /* Changed to pure white to force update */
   margin: 0 0 10px 0;
   text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
+  font-family: "FairyDustB", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 #lightbox-description {
@@ -847,6 +852,7 @@ img { opacity: 1 !important; }
   text-align: left;
   text-shadow: 0 0 4px #000, 0 0 8px #000, 0 0 16px #000, 0 0 24px #000, 0 0 32px #000 !important; /* Much stronger black glow */
   white-space: pre-line;
+  font-family: "FairyDustB", "FairyDustBFallback", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Responsive: stack on small screens */
