@@ -278,7 +278,7 @@ function Page1() {
               if (code === 39 || code === 8217 || code === 8216 || code === 8218 || code === 8219) {
                 return <span key={i} style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', display: 'inline' }}>'</span>
               }
-              return <React.Fragment key={i}>{char}</React.Fragment>
+              return <span key={i}>{char}</span>
             })}
           </p>
         )}
