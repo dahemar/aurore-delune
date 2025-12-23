@@ -261,7 +261,12 @@ function Page1() {
 
         {bio && (
           <p style={{ maxWidth: 600, margin: '24px auto 0 auto', whiteSpace: 'pre-line' }}>
-            {bio}
+            {String(bio).split(/([''])/g).map((part, i) => {
+              if (part === "'" || part === "'" || part === "'") {
+                return <span key={i} style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', display: 'inline' }}>'</span>
+              }
+              return <React.Fragment key={i}>{part}</React.Fragment>
+            })}
           </p>
         )}
       </div>
