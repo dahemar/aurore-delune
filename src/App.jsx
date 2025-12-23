@@ -221,6 +221,17 @@ function Page1() {
   const formTitle = normalizeText(first.form_title)
   const formDescription = normalizeText(first.form_description)
   const bio = normalizeText(language === 'en' ? (first.bio_eng || first.bio) : first.bio)
+  if (bio) {
+    // Find all apostrophe-like characters
+    const apostropheMatches = []
+    Array.from(bio).forEach((char, idx) => {
+      const code = char.charCodeAt(0)
+      if (code === 39 || code === 8217 || code === 8216 || code === 8218 || code === 8219) {
+        apostropheMatches.push({ idx, char, code })
+      }
+    })
+    console.log('[Page1] bio apostrophes found:', apostropheMatches.map(a => ({ code: a.code, char: a.char })))
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -260,12 +271,14 @@ function Page1() {
         </form>
 
         {bio && (
-          <p style={{ maxWidth: 600, margin: '24px auto 0 auto', whiteSpace: 'pre-line' }}>
-            {String(bio).split(/([''])/g).map((part, i) => {
-              if (part === "'" || part === "'" || part === "'") {
+          <p style={{ maxWidth: 600, margin: '24px auto 0 auto', whiteSpace: 'pre-line', fontFamily: '"FairyDustB", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+            {Array.from(String(bio)).map((char, i) => {
+              const code = char.charCodeAt(0)
+              // Check if it's any type of apostrophe (39 = ', 8217 = ', 8216 = ', 8218 = ', 8219 = ')
+              if (code === 39 || code === 8217 || code === 8216 || code === 8218 || code === 8219) {
                 return <span key={i} style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', display: 'inline' }}>'</span>
               }
-              return <React.Fragment key={i}>{part}</React.Fragment>
+              return <React.Fragment key={i}>{char}</React.Fragment>
             })}
           </p>
         )}
