@@ -73,7 +73,7 @@ function LayoutShell({ children }) {
   // Preload de datos para mejorar la experiencia del usuario
   useEffect(() => {
     // Preload de todas las hojas en segundo plano
-    const sheets = ['page1_je_mappelle_aurore', 'page2_topographie_etrange', 'page3_reliques_reve', 'page4_memoires_mont_songe']
+    const sheets = ['page1_je_mappelle_aurore', 'page2_topographie_etrange', 'page3_reliques_reve', 'page4_memoires_mont_songe', 'page5_performances_aurore']
     sheets.forEach(sheet => {
       preloadSheetData(sheet).catch(() => {}) // Ignorar errores del preload
     })
@@ -118,6 +118,11 @@ function Checklist() {
     },
     { 
       id: 'item5', 
+      to: language === 'en' ? '/en/page5' : '/page5', 
+      label: language === 'en' ? 'Performances by Aurore' : "Performances d'Aurore" 
+    },
+    { 
+      id: 'item6', 
       to: language === 'en' ? '/' : '/en', 
       label: language === 'en' ? 'Mon site existe aussi en français' : 'My site also exists in English' 
     },
@@ -524,6 +529,58 @@ function Page4() {
   )
 }
 
+function getYouTubeEmbedUrl(url) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+}
+
+function Page5() {
+  const { data } = useSheetData('page5_performances_aurore')
+  // Header expects title, content, then videos rows
+  const language = useLanguage()
+  const pageTitle = language === 'en' ? 'Performances by Aurore' : "Performances d'Aurore"
+  
+  const videos = Array.isArray(data) ? data.filter(row => row.youtube_url && row.youtube_url.trim() !== '') : []
+  return (
+    <Layout>
+      <div className="content-box page5">
+        <h1 style={{ textAlign: 'center', marginTop: 0 }}>{pageTitle}</h1>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', marginTop: '40px' }}>
+          {videos.map((vid, idx) => {
+            const embedUrl = getYouTubeEmbedUrl(vid.youtube_url);
+            const title = language === 'en' ? (vid.title_eng || vid.title) : vid.title;
+            const description = language === 'en' ? (vid.description_eng || vid.description) : vid.description;
+            
+            return (
+              <div key={idx} className="video-container" style={{ textAlign: 'center' }}>
+                {title && <h2 style={{ marginBottom: '15px', fontSize: '1.5em' }}>{title}</h2>}
+                {embedUrl ? (
+                  <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%', marginBottom: '15px' }}>
+                    <iframe 
+                      src={embedUrl} 
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen
+                      title={title || "YouTube video"}
+                    />
+                  </div>
+                ) : (
+                  <p>Invalid Video URL</p>
+                )}
+                {description && <p style={{ marginTop: '10px' }}>{description}</p>}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+      <Checklist />
+      <SongSelect />
+    </Layout>
+  )
+}
+
 export default function App() {
   return (
     <LayoutShell>
@@ -533,6 +590,7 @@ export default function App() {
         <Route path="/page2" element={<Page2 />} />
         <Route path="/page3" element={<Page3 />} />
         <Route path="/page4" element={<Page4 />} />
+        <Route path="/page5" element={<Page5 />} />
         {/* Local dev: redirect legacy GH Pages base to root */}
         <Route path="/aurore/*" element={<Navigate to="/" replace />} />
         
@@ -542,6 +600,7 @@ export default function App() {
         <Route path="/en/page2" element={<Page2 />} />
         <Route path="/en/page3" element={<Page3 />} />
         <Route path="/en/page4" element={<Page4 />} />
+        <Route path="/en/page5" element={<Page5 />} />
       </Routes>
     </LayoutShell>
   )
