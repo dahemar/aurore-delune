@@ -96,36 +96,36 @@ function Checklist() {
   const language = useLanguage()
   
   const items = [
-    { 
-      id: 'item1', 
-      to: language === 'en' ? '/en/page1' : '/page1', 
-      label: language === 'en' ? "My name is Aurore Delune" : "Je m'appelle Aurore Delune" 
+    {
+      id: 'item1',
+      to: language === 'en' ? '/en/page1' : '/page1',
+      label: language === 'en' ? "My name is Aurore Delune" : "Je m'appelle Aurore Delune"
     },
-    { 
-      id: 'item2', 
-      to: language === 'en' ? '/en/page2' : '/page2', 
-      label: language === 'en' ? "Topography of the Strange" : "Topographie de l'étrange" 
+    {
+      id: 'item2',
+      to: language === 'en' ? '/en/page2' : '/page2',
+      label: language === 'en' ? "Topography of the Strange" : "Topographie de l'étrange"
     },
-    { 
-      id: 'item3', 
-      to: language === 'en' ? '/en/page3' : '/page3', 
-      label: language === 'en' ? 'Relics of the Dream' : 'Reliques du rêve' 
+    {
+      id: 'item3',
+      to: language === 'en' ? '/en/page3' : '/page3',
+      label: language === 'en' ? 'Relics of the Dream' : 'Reliques du rêve'
     },
-    { 
-      id: 'item4', 
-      to: language === 'en' ? '/en/page4' : '/page4', 
-      label: language === 'en' ? 'Memories of Mount Songe' : 'Mémoires du Mont Songe' 
+    {
+      id: 'item4',
+      to: language === 'en' ? '/en/page4' : '/page4',
+      label: language === 'en' ? 'Memories of Mount Songe' : 'Mémoires du Mont Songe'
     },
-    { 
-      id: 'item5', 
-      to: language === 'en' ? '/en/page5' : '/page5', 
-      label: language === 'en' ? 'Performances by Aurore' : "Performances d'Aurore" 
+    {
+      id: 'item5',
+      to: language === 'en' ? '/en/page5' : '/page5',
+      label: language === 'en' ? 'Performances by Aurore' : "Performances d'auror"
     },
-    { 
-      id: 'item6', 
-      to: language === 'en' ? '/' : '/en', 
-      label: language === 'en' ? 'Mon site existe aussi en français' : 'My site also exists in English' 
-    },
+    {
+      id: 'item6',
+      to: language === 'en' ? '/' : '/en',
+      label: language === 'en' ? 'Mon site existe aussi en français' : 'My site also exists in English'
+    }
   ]
   return (
     <div className="checklist">
@@ -540,7 +540,7 @@ function Page5() {
   const { data } = useSheetData('page5_performances_aurore')
   // Header expects title, content, then videos rows
   const language = useLanguage()
-  const pageTitle = language === 'en' ? 'Performances by Aurore' : "Performances d'Aurore"
+  const pageTitle = language === 'en' ? 'Performances by Aurore' : "Performances d'auror"
   
   const videos = Array.isArray(data) ? data.filter(row => row.youtube_url && row.youtube_url.trim() !== '') : []
   return (
