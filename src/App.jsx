@@ -9,7 +9,7 @@ import StackedGallery from './components/StackedGallery'
 import Lightbox from './components/Lightbox'
 import HoverTrail from './components/HoverTrail'
 import { useSheetData } from './hooks/useSheetData'
-import { processImageUrl, preloadSheetData, normalizeText } from './utils/sheetsApi'
+import { processAudioUrl, processImageUrl, preloadSheetData, normalizeText } from './utils/sheetsApi'
 
 const base = import.meta.env.BASE_URL
 
@@ -23,25 +23,19 @@ function useLanguage() {
 
 function AudioPlayer() {
   const audioRef = useRef(null)
-  const [src, setSrc] = useState('')
   useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
     const savedSrc = localStorage.getItem('audioSrc') || ''
     const savedTime = parseFloat(localStorage.getItem('audioTime') || '0')
     const savedPlaying = localStorage.getItem('audioPlaying') === 'true'
     if (savedSrc) {
-      setSrc(savedSrc)
-      const audio = audioRef.current
       audio.src = savedSrc
-      const onLoaded = () => {
+      audio.addEventListener('loadedmetadata', () => {
         if (!isNaN(savedTime)) audio.currentTime = savedTime
         if (savedPlaying) audio.play().catch(() => {})
-      }
-      audio.addEventListener('loadedmetadata', onLoaded, { once: true })
+      }, { once: true })
     }
-  }, [])
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
     const onTime = () => { localStorage.setItem('audioTime', String(audio.currentTime)) }
     const onPlay = () => { localStorage.setItem('audioSrc', audio.src); localStorage.setItem('audioPlaying', 'true') }
     const onPause = () => { localStorage.setItem('audioPlaying', 'false') }
@@ -73,7 +67,7 @@ function LayoutShell({ children }) {
   // Preload de datos para mejorar la experiencia del usuario
   useEffect(() => {
     // Preload de todas las hojas en segundo plano
-    const sheets = ['page1_je_mappelle_aurore', 'page2_topographie_etrange', 'page3_reliques_reve', 'page4_memoires_mont_songe', 'page5_performances_aurore']
+    const sheets = ['page1_je_mappelle_aurore', 'page2_topographie_etrange', 'page3_reliques_reve', 'page4_memoires_mont_songe', 'page5_performances_aurore', 'songs_player']
     sheets.forEach(sheet => {
       preloadSheetData(sheet).catch(() => {}) // Ignorar errores del preload
     })
@@ -119,7 +113,7 @@ function Checklist() {
     {
       id: 'item5',
       to: language === 'en' ? '/en/page5' : '/page5',
-      label: language === 'en' ? 'Performances by Aurore' : "Performances d'auror"
+      label: language === 'en' ? 'Performaces by Auror' : "Performances d'Auror"
     },
     {
       id: 'item6',
@@ -185,15 +179,35 @@ function Layout({ children }) {
 
 function SongSelect() {
   const language = useLanguage()
+  const { data } = useSheetData('songs_player')
+  const sheetOptions = Array.isArray(data)
+    ? data
+        .filter((row) => row.audio_url && String(row.audio_url).trim() !== '')
+        .sort((left, right) => Number(left.order || 9999) - Number(right.order || 9999))
+        .map((row) => ({
+          value: processAudioUrl(row.audio_url),
+          label: normalizeText(language === 'en' ? (row.title_eng || row.title) : row.title)
+        }))
+        .filter((option) => option.value && option.label)
+    : []
+
+  const fallbackOptions = [
+    { value: `${base}audio/song1.wav`, label: 'Stray' },
+    { value: `${base}audio/song2.wav`, label: 'deep Forest' }
+  ]
+
   const options = [
     { value: '', label: language === 'en' ? 'songs' : 'chansons' },
-    { value: `${base}audio/song1.wav`, label: 'Stray' },
-    { value: `${base}audio/song2.wav`, label: 'deep Forest' },
+    ...(sheetOptions.length > 0 ? sheetOptions : fallbackOptions)
   ]
+
   const onChange = (e) => {
     const selected = e.target.value
+    if (!selected) return
     const audio = document.getElementById('audio-player')
-    if (selected && audio) { try { audio.pause(); audio.src = selected; audio.load(); audio.play().catch(() => {}) } catch {} }
+    if (!audio) return
+    audio.src = selected
+    audio.play().catch(() => {})
   }
   return (
     <div className="simple-dropdown">
@@ -540,7 +554,7 @@ function Page5() {
   const { data } = useSheetData('page5_performances_aurore')
   // Header expects title, content, then videos rows
   const language = useLanguage()
-  const pageTitle = language === 'en' ? 'Performances by Aurore' : "Performances d'auror"
+  const pageTitle = language === 'en' ? 'Performaces by Auror' : "Performances d'Auror"
   
   const videos = Array.isArray(data) ? data.filter(row => row.youtube_url && row.youtube_url.trim() !== '') : []
   return (

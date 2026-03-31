@@ -206,6 +206,18 @@ export function processImageUrl(url) {
   return `${base}${trimmed.replace(/^\/+/, '')}`
 }
 
+export function processAudioUrl(url) {
+  if (!url) return url
+  const trimmed = url.trim()
+
+  if (/^https?:\/\//i.test(trimmed) || /^data:/i.test(trimmed)) {
+    return trimmed
+  }
+
+  const base = import.meta.env.BASE_URL || '/'
+  return `${base}${trimmed.replace(/^\/+/, '')}`
+}
+
 // Limpiar caché expirado
 export function cleanupExpiredCache() {
   try {
