@@ -547,7 +547,9 @@ function getVideoEmbedUrl(url) {
   if (!url) return null;
 
   try {
-    const rawUrl = url.trim();
+    const rawValue = String(url).trim();
+    const hyperlinkUrl = rawValue.match(/HYPERLINK\(\s*["']([^"']+)["']/i)?.[1];
+    const rawUrl = hyperlinkUrl || rawValue.match(/https?:\/\/[^\s"',)]+/i)?.[0] || rawValue;
     const parsedUrl = new URL(/^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`);
     const hostname = parsedUrl.hostname.toLowerCase().replace(/^www\./, '');
 
@@ -562,7 +564,7 @@ function getVideoEmbedUrl(url) {
     }
 
     if (hostname === 'vimeo.com' || hostname.endsWith('.vimeo.com')) {
-      const videoId = parsedUrl.pathname.match(/\/(\d+)(?:\/|$)/)?.[1]
+      const videoId = parsedUrl.pathname.match(/(?:^|\/)(\d+)(?:\/|$)/)?.[1]
         || parsedUrl.searchParams.get('clip_id');
 
       return videoId ? `https://player.vimeo.com/video/${videoId}` : null;
@@ -582,7 +584,9 @@ function Page5() {
   const language = useLanguage()
   const pageTitle = language === 'en' ? 'Performaces by Auror' : "Performances d'Auror"
   
-  const videos = Array.isArray(data) ? data.filter(row => row.youtube_url?.trim()) : []
+  const videos = Array.isArray(data)
+    ? data.filter(row => String(row.youtube_url || '').trim())
+    : []
   return (
     <Layout>
       <div className="content-box page5">
