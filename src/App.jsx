@@ -564,10 +564,23 @@ function getVideoEmbedUrl(url) {
     }
 
     if (hostname === 'vimeo.com' || hostname.endsWith('.vimeo.com')) {
-      const videoId = parsedUrl.pathname.match(/(?:^|\/)(\d+)(?:\/|$)/)?.[1]
+      const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+      const videoIndex = pathParts.findIndex(part => /^\d+$/.test(part));
+      const videoId = videoIndex >= 0 ? pathParts[videoIndex] : null;
+      const privacyHash = videoIndex >= 0 && pathParts[videoIndex + 1]
+        ? pathParts[videoIndex + 1]
+        : parsedUrl.searchParams.get('h');
+
+      if (videoId) {
+        const embedUrl = new URL(`https://player.vimeo.com/video/${videoId}`);
+        if (privacyHash) embedUrl.searchParams.set('h', privacyHash);
+        return embedUrl.href;
+      }
+
+      const legacyVideoId = parsedUrl.pathname.match(/(?:^|\/)(\d+)(?:\/|$)/)?.[1]
         || parsedUrl.searchParams.get('clip_id');
 
-      return videoId ? `https://player.vimeo.com/video/${videoId}` : null;
+      return legacyVideoId ? `https://player.vimeo.com/video/${legacyVideoId}` : null;
     }
 
     // Other video services can provide an embeddable player URL directly.
