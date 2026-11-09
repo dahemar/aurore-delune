@@ -543,27 +543,53 @@ function Page4() {
   )
 }
 
-function getYouTubeEmbedUrl(url) {
+function getVideoEmbedUrl(url) {
   if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+
+  try {
+    const rawUrl = url.trim();
+    const parsedUrl = new URL(/^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`);
+    const hostname = parsedUrl.hostname.toLowerCase().replace(/^www\./, '');
+
+    if (hostname === 'youtu.be' || hostname.endsWith('youtube.com')) {
+      const videoId = hostname === 'youtu.be'
+        ? parsedUrl.pathname.slice(1)
+        : parsedUrl.searchParams.get('v') || parsedUrl.pathname.match(/\/(?:embed|shorts|v)\/([^/?]+)/)?.[1];
+
+      return videoId && /^[\w-]{11}$/.test(videoId)
+        ? `https://www.youtube.com/embed/${videoId}`
+        : null;
+    }
+
+    if (hostname === 'vimeo.com' || hostname.endsWith('.vimeo.com')) {
+      const videoId = parsedUrl.pathname.match(/\/(\d+)(?:\/|$)/)?.[1]
+        || parsedUrl.searchParams.get('clip_id');
+
+      return videoId ? `https://player.vimeo.com/video/${videoId}` : null;
+    }
+
+    // Other video services can provide an embeddable player URL directly.
+    return parsedUrl.href;
+  } catch {
+    return null;
+  }
+
+  return null;
 }
 
 function Page5() {
   const { data } = useSheetData('page5_performances_aurore')
-  // Header expects title, content, then videos rows
   const language = useLanguage()
   const pageTitle = language === 'en' ? 'Performaces by Auror' : "Performances d'Auror"
   
-  const videos = Array.isArray(data) ? data.filter(row => row.youtube_url && row.youtube_url.trim() !== '') : []
+  const videos = Array.isArray(data) ? data.filter(row => row.youtube_url?.trim()) : []
   return (
     <Layout>
       <div className="content-box page5">
         <h1 style={{ textAlign: 'center', marginTop: 0 }}>{pageTitle}</h1>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', marginTop: '40px' }}>
           {videos.map((vid, idx) => {
-            const embedUrl = getYouTubeEmbedUrl(vid.youtube_url);
+            const embedUrl = getVideoEmbedUrl(vid.youtube_url);
             const title = language === 'en' ? (vid.title_eng || vid.title) : vid.title;
             const description = language === 'en' ? (vid.description_eng || vid.description) : vid.description;
             
@@ -577,7 +603,7 @@ function Page5() {
                       style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                       allowFullScreen
-                      title={title || "YouTube video"}
+                      title={title || "Video"}
                     />
                   </div>
                 ) : (
